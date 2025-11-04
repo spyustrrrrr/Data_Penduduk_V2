@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ResidentController;
 use App\Http\Controllers\KKController;
+use App\Http\Controllers\DashboardController; // TAMBAHKAN INI
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthController::class, 'showLogin'])->name('login');
@@ -14,13 +15,12 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-    
-    Route::get('/', function () {
-        return redirect()->route('residents.index');
-    });
+
+    // UBAH BAGIAN INI
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('residents/export', [ResidentController::class, 'export'])->name('residents.export');
     Route::resource('residents', ResidentController::class);
-    
+
     Route::resource('kks', KKController::class);
 });

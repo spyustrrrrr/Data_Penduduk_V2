@@ -50,6 +50,8 @@ class ResidentController extends Controller
         return view('residents.create', compact('kks'));
     }
 
+    // ... (method index dan create Anda biarkan saja)
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -59,12 +61,30 @@ class ResidentController extends Controller
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tanggal_lahir' => 'required|date',
             'tempat_lahir' => 'required|string',
-            'status_perkawinan' => 'required|in:Belum Kawin,Kawin,Cerai Hidup,Cerai Mati',
+            
+            // Aturan validasi yang diperbarui
+            'status_perkawinan' => 'required|in:Belum Menikah,Menikah,Janda,Duda',
             'agama' => 'required|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',
+            'alamat' => 'required|string|max:255', // Tambahkan validasi alamat
+            
+            'pendidikan' => 'nullable|in:SD,SMP,SMA/SMK,D1/D2/D3,S1/D4,S2,S3',
+            
             'pekerjaan' => 'nullable|string',
-            'pendidikan' => 'nullable|string',
             'no_telepon' => 'nullable|string',
             'email' => 'nullable|email',
+
+            // Validasi untuk bidang baru
+            'golongan_darah' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            'status_merokok' => 'nullable|in:MEROKOK,TIDAK MEROKOK',
+            'nama_ayah' => 'nullable|string|max:255',
+            'nama_ibu' => 'nullable|string|max:255',
+            'riwayat_penyakit' => 'nullable|string',
+            'cek_kesehatan' => 'nullable|in:SETIAP BULAN,3 BULAN SEKALI,6 BULAN SEKALI,SETAHUN SEKALI,TIDAK PERNAH',
+            'asuransi_kesehatan' => 'nullable|in:BPJS KESEHATAN,BPJS PRIBADI,ASURANSI SWASTA,TIDAK MEMILIKI',
+            'bpjs_ketenagakerjaan' => 'nullable|in:MEMILIKI,TIDAK MEMILIKI',
+            'tambah_anak' => 'nullable|in:YA,TIDAK',
+            'jumlah_anak' => 'nullable|integer|min:0',
+            'alat_kontrasepsi' => 'nullable|in:KONDOM,IUD/SPIRAL,PIL,SUNTIK,IMPLANT,STERIL,TIDAK ADA',
         ]);
 
         Resident::create($validated);
@@ -87,18 +107,38 @@ class ResidentController extends Controller
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tanggal_lahir' => 'required|date',
             'tempat_lahir' => 'required|string',
-            'status_perkawinan' => 'required|in:Belum Kawin,Kawin,Cerai Hidup,Cerai Mati',
+
+            // Aturan validasi yang diperbarui
+            'status_perkawinan' => 'required|in:Belum Menikah,Menikah,Janda,Duda',
             'agama' => 'required|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',
+            'alamat' => 'required|string|max:255', // Tambahkan validasi alamat
+
+            'pendidikan' => 'nullable|in:SD,SMP,SMA/SMK,D1/D2/D3,S1/D4,S2,S3',
+
             'pekerjaan' => 'nullable|string',
-            'pendidikan' => 'nullable|string',
             'no_telepon' => 'nullable|string',
             'email' => 'nullable|email',
+
+            // Validasi untuk bidang baru
+            'golongan_darah' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            'status_merokok' => 'nullable|in:MEROKOK,TIDAK MEROKOK',
+            'nama_ayah' => 'nullable|string|max:255',
+            'nama_ibu' => 'nullable|string|max:255',
+            'riwayat_penyakit' => 'nullable|string',
+            'cek_kesehatan' => 'nullable|in:SETIAP BULAN,3 BULAN SEKALI,6 BULAN SEKALI,SETAHUN SEKALI,TIDAK PERNAH',
+            'asuransi_kesehatan' => 'nullable|in:BPJS KESEHATAN,BPJS PRIBADI,ASURANSI SWASTA,TIDAK MEMILIKI',
+            'bpjs_ketenagakerjaan' => 'nullable|in:MEMILIKI,TIDAK MEMILIKI',
+            'tambah_anak' => 'nullable|in:YA,TIDAK',
+            'jumlah_anak' => 'nullable|integer|min:0',
+            'alat_kontrasepsi' => 'nullable|in:KONDOM,IUD/SPIRAL,PIL,SUNTIK,IMPLANT,STERIL,TIDAK ADA',
         ]);
 
         $resident->update($validated);
 
         return redirect()->route('residents.index')->with('success', 'Penduduk berhasil diperbarui');
     }
+
+    // ... (method destroy dan export Anda biarkan saja)
 
     public function destroy(Resident $resident)
     {
