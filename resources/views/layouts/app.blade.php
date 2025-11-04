@@ -6,6 +6,8 @@
     <title>@yield('title') - Manajemen Penduduk</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary: #2563eb;
@@ -60,6 +62,10 @@
             </div>
 
             <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }} flex items-center gap-3 px-4 py-3 rounded-lg text-white text-opacity-90 hover:text-opacity-100">
+                    <i class="fas fa-home w-5"></i>
+                    <span>Dashboard</span>
+                </a>
                 <a href="{{ route('residents.index') }}" class="nav-item {{ request()->routeIs('residents.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-3 rounded-lg text-white text-opacity-90 hover:text-opacity-100">
                     <i class="fas fa-id-card w-5"></i>
                     <span>Data Penduduk</span>
@@ -67,6 +73,10 @@
                 <a href="{{ route('kks.index') }}" class="nav-item {{ request()->routeIs('kks.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-3 rounded-lg text-white text-opacity-90 hover:text-opacity-100">
                     <i class="fas fa-home w-5"></i>
                     <span>Kartu Keluarga</span>
+                </a>
+                <a href="{{ route('charts.index') }}" class="nav-item {{ request()->routeIs('charts.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-3 rounded-lg text-white text-opacity-90 hover:text-opacity-100">
+                    <i class="fas fa-chart-bar w-5"></i>
+                    <span>Grafik & Statistik</span>
                 </a>
             </nav>
 
@@ -134,5 +144,7 @@
             </div>
         </main>
     </div>
+    
+    @stack('scripts')
 </body>
 </html>
