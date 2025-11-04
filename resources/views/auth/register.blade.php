@@ -8,21 +8,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950 min-h-screen flex items-center justify-center p-4">
-    <!-- Updated to match modern design with dark blue background and white card -->
     <div class="w-full max-w-md">
         <div class="bg-white rounded-3xl shadow-2xl p-8">
-            <!-- Logo and branding -->
-            <div class="flex items-center gap-3 mb-8">
-                <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-users text-white text-xl"></i>
+            <!-- Logo -->
+            <div class="flex flex-col items-center mb-8">
+                <div class="w-24 h-24 mb-4 rounded-2xl flex items-center justify-center">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo GERGAJI" class="w-full h-full object-contain">
                 </div>
-                <div>
-                    <h2 class="text-lg font-bold text-gray-900">GERGAJI</h2>
-                    <p class="text-xs text-gray-600">Data Warga RT</p>
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold text-gray-900">GERGAJI</h2>
+                    <p class="text-sm text-gray-600">Data Warga RT</p>
                 </div>
             </div>
 
-            <!-- Register heading with underline -->
+            <!-- Register heading -->
             <div class="mb-8">
                 <h1 class="text-4xl font-bold text-gray-900 pb-3 border-b-4 border-blue-600 inline-block">DAFTAR</h1>
             </div>
@@ -88,7 +87,7 @@
                     </div>
                 </div>
 
-                <!-- Register button with gradient -->
+                <!-- Register button -->
                 <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold py-3 rounded-lg hover:from-blue-700 hover:to-cyan-600 transition transform hover:scale-105 active:scale-95 shadow-lg">
                     DAFTAR
                 </button>

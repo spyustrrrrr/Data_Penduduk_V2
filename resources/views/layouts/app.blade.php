@@ -51,12 +51,12 @@
         <aside class="sidebar w-64 text-white shadow-lg flex flex-col">
             <div class="p-6 border-b border-white border-opacity-20">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-users text-lg"></i>
+                    <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center p-1 shadow-lg">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-full h-full object-contain">
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold">Penduduk</h1>
-                        <p class="text-xs text-white text-opacity-70">Management System</p>
+                        <h1 class="text-xl font-bold">GERGAJI</h1>
+                        <p class="text-xs text-white text-opacity-70">Data Warga RT</p>
                     </div>
                 </div>
             </div>
