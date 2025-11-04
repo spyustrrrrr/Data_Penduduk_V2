@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class ResidentController extends Controller
 {
+    /**
+     * Menampilkan daftar penduduk dengan filter dan pencarian.
+     */
     public function index(Request $request)
     {
         $query = Resident::with('kk');
@@ -16,11 +19,14 @@ class ResidentController extends Controller
         // Search
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('nama', 'like', "%$search%")
-                  ->orWhere('nik', 'like', "%$search%")
-                  ->orWhere('kks.no_kk', 'like', "%$search%");
-            })->join('kks', 'residents.kk_id', '=', 'kks.id');
+            // Memastikan join hanya dilakukan sekali jika ada search
+            $query->join('kks', 'residents.kk_id', '=', 'kks.id')
+                  ->where(function ($q) use ($search) {
+                      $q->where('residents.nama', 'like', "%$search%")
+                        ->orWhere('residents.nik', 'like', "%$search%")
+                        ->orWhere('kks.no_kk', 'like', "%$search%");
+                  })
+                  ->select('residents.*'); // Penting untuk menghindari konflik kolom 'id'
         }
 
         // Filter by jenis_kelamin
@@ -37,41 +43,49 @@ class ResidentController extends Controller
         if ($request->filled('agama')) {
             $query->where('agama', $request->agama);
         }
+        
+        // [BARU] Filter by pendidikan
+        if ($request->filled('pendidikan')) {
+            $query->where('pendidikan', $request->pendidikan);
+        }
 
-        $residents = $query->paginate(15);
+        $residents = $query->paginate(15)->appends($request->query());
         $kks = KK::all();
 
         return view('residents.index', compact('residents', 'kks'));
     }
 
+    /**
+     * Menampilkan form untuk membuat penduduk baru.
+     */
     public function create()
     {
         $kks = KK::all();
         return view('residents.create', compact('kks'));
     }
 
-    // ... (method index dan create Anda biarkan saja)
-
+    /**
+     * Menyimpan penduduk baru ke database.
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'kk_id' => 'required|exists:kks,id',
-            'nik' => 'required|unique:residents',
+            'nik' => 'required|string|unique:residents',
             'nama' => 'required|string',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tanggal_lahir' => 'required|date',
             'tempat_lahir' => 'required|string',
+            'alamat' => 'required|string|max:255',
             
             // Aturan validasi yang diperbarui
             'status_perkawinan' => 'required|in:Belum Menikah,Menikah,Janda,Duda',
             'agama' => 'required|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',
-            'alamat' => 'required|string|max:255', // Tambahkan validasi alamat
-            
             'pendidikan' => 'nullable|in:SD,SMP,SMA/SMK,D1/D2/D3,S1/D4,S2,S3',
             
             'pekerjaan' => 'nullable|string',
             'no_telepon' => 'nullable|string',
-            'email' => 'nullable|email',
+            'email' => 'nullable|email|unique:residents',
 
             // Validasi untuk bidang baru
             'golongan_darah' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
@@ -92,32 +106,46 @@ class ResidentController extends Controller
         return redirect()->route('residents.index')->with('success', 'Penduduk berhasil ditambahkan');
     }
 
+    /**
+     * [BARU] Menampilkan detail data penduduk.
+     */
+    public function show(Resident $resident)
+    {
+        // $resident sudah di-load oleh Route Model Binding
+        return view('residents.show', compact('resident'));
+    }
+
+    /**
+     * Menampilkan form untuk mengedit data penduduk.
+     */
     public function edit(Resident $resident)
     {
         $kks = KK::all();
         return view('residents.edit', compact('resident', 'kks'));
     }
 
+    /**
+     * Memperbarui data penduduk di database.
+     */
     public function update(Request $request, Resident $resident)
     {
         $validated = $request->validate([
             'kk_id' => 'required|exists:kks,id',
-            'nik' => 'required|unique:residents,nik,' . $resident->id,
+            'nik' => 'required|string|unique:residents,nik,' . $resident->id,
             'nama' => 'required|string',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tanggal_lahir' => 'required|date',
             'tempat_lahir' => 'required|string',
+            'alamat' => 'required|string|max:255',
 
             // Aturan validasi yang diperbarui
             'status_perkawinan' => 'required|in:Belum Menikah,Menikah,Janda,Duda',
             'agama' => 'required|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',
-            'alamat' => 'required|string|max:255', // Tambahkan validasi alamat
-
             'pendidikan' => 'nullable|in:SD,SMP,SMA/SMK,D1/D2/D3,S1/D4,S2,S3',
 
             'pekerjaan' => 'nullable|string',
             'no_telepon' => 'nullable|string',
-            'email' => 'nullable|email',
+            'email' => 'nullable|email|unique:residents,email,' . $resident->id,
 
             // Validasi untuk bidang baru
             'golongan_darah' => 'nullable|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
@@ -138,22 +166,32 @@ class ResidentController extends Controller
         return redirect()->route('residents.index')->with('success', 'Penduduk berhasil diperbarui');
     }
 
-    // ... (method destroy dan export Anda biarkan saja)
-
+    /**
+     * Menghapus data penduduk dari database.
+     */
     public function destroy(Resident $resident)
     {
         $resident->delete();
         return redirect()->route('residents.index')->with('success', 'Penduduk berhasil dihapus');
     }
 
+    /**
+     * Mengekspor data penduduk ke CSV.
+     */
     public function export(Request $request)
     {
         $query = Resident::with('kk');
 
+        // Menggunakan filter yang sama dengan 'index'
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where('nama', 'like', "%$search%")
-                  ->orWhere('nik', 'like', "%$search%");
+            $query->join('kks', 'residents.kk_id', '=', 'kks.id')
+                  ->where(function ($q) use ($search) {
+                      $q->where('residents.nama', 'like', "%$search%")
+                        ->orWhere('residents.nik', 'like', "%$search%")
+                        ->orWhere('kks.no_kk', 'like', "%$search%");
+                  })
+                  ->select('residents.*');
         }
 
         if ($request->filled('jenis_kelamin')) {
@@ -168,12 +206,17 @@ class ResidentController extends Controller
             $query->where('agama', $request->agama);
         }
 
+        if ($request->filled('pendidikan')) {
+            $query->where('pendidikan', $request->pendidikan);
+        }
+
         $residents = $query->get();
 
-        $csv = "NIK,Nama,Jenis Kelamin,Tanggal Lahir,Tempat Lahir,Status Perkawinan,Agama,Pekerjaan,Pendidikan,No. Telepon,Email,No. KK\n";
+        // [UPDATE] Menambahkan kolom baru ke CSV
+        $csv = "NIK,Nama,Jenis Kelamin,Tanggal Lahir,Tempat Lahir,Status Perkawinan,Agama,Pendidikan,Pekerjaan,Nama Ayah,Nama Ibu,Gol. Darah,No. KK\n";
 
         foreach ($residents as $resident) {
-            $csv .= "\"{$resident->nik}\",\"{$resident->nama}\",\"{$resident->jenis_kelamin}\",\"{$resident->tanggal_lahir}\",\"{$resident->tempat_lahir}\",\"{$resident->status_perkawinan}\",\"{$resident->agama}\",\"{$resident->pekerjaan}\",\"{$resident->pendidikan}\",\"{$resident->no_telepon}\",\"{$resident->email}\",\"{$resident->kk->no_kk}\"\n";
+            $csv .= "\"{$resident->nik}\",\"{$resident->nama}\",\"{$resident->jenis_kelamin}\",\"{$resident->tanggal_lahir->format('Y-m-d')}\",\"{$resident->tempat_lahir}\",\"{$resident->status_perkawinan}\",\"{$resident->agama}\",\"{$resident->pendidikan}\",\"{$resident->pekerjaan}\",\"{$resident->nama_ayah}\",\"{$resident->nama_ibu}\",\"{$resident->golongan_darah}\",\"{$resident->kk->no_kk}\"\n";
         }
 
         return response($csv, 200, [
