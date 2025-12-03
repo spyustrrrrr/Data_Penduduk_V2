@@ -19,7 +19,6 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     
-    // RUTE BARU UNTUK GRAFIK
     Route::get('charts', [ChartController::class, 'index'])->name('charts.index');
 
     Route::get('residents/export', [ResidentController::class, 'export'])->name('residents.export');

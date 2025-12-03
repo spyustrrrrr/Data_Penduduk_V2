@@ -1,51 +1,62 @@
 @extends('layouts.app')
 
-@section('title', 'Grafik & Statistik')
+@section('title', 'Grafik')
 
 @section('content')
-<div class="mb-8">
-    <h3 class="text-2xl font-bold text-gray-900 mb-2">Grafik & Statistik Penduduk</h3>
-    <p class="text-gray-600">Visualisasi data penduduk dalam bentuk grafik</p>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-    <!-- Status Perkawinan -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h3 class="text-lg font-semibold mb-4 text-gray-900">
-            <i class="fas fa-ring text-blue-600 mr-2"></i>Status Perkawinan
-        </h3>
-        <div style="height: 300px;">
-            <canvas id="statusChart"></canvas>
-        </div>
-    </div>
-    
-    <!-- Pendidikan -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h3 class="text-lg font-semibold mb-4 text-gray-900">
-            <i class="fas fa-graduation-cap text-green-600 mr-2"></i>Pendidikan
-        </h3>
-        <div style="height: 300px;">
-            <canvas id="pendidikanChart"></canvas>
-        </div>
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <h3 class="text-3xl font-bold text-white">Pilih Kategori</h3>
     </div>
 
-    <!-- Rentang Umur -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 lg:col-span-2">
-        <h3 class="text-lg font-semibold mb-4 text-gray-900">
-            <i class="fas fa-birthday-cake text-purple-600 mr-2"></i>Rentang Umur
-        </h3>
-        <div style="height: 350px;">
-            <canvas id="umurChart"></canvas>
-        </div>
+    <!-- Category Buttons -->
+    <div class="flex gap-4">
+        <button onclick="showChart('umur')" id="btn-umur" class="bg-teal-500 hover:bg-teal-600 text-white font-bold px-6 py-3 rounded-xl transition">
+            Umur
+        </button>
+        <button onclick="showChart('pendidikan')" id="btn-pendidikan" class="bg-white hover:bg-gray-100 text-gray-900 font-bold px-6 py-3 rounded-xl transition">
+            Pendidikan
+        </button>
+        <button onclick="showChart('pekerjaan')" id="btn-pekerjaan" class="bg-white hover:bg-gray-100 text-gray-900 font-bold px-6 py-3 rounded-xl transition">
+            Pekerjaan
+        </button>
+        <button onclick="showChart('status')" id="btn-status" class="bg-white hover:bg-gray-100 text-gray-900 font-bold px-6 py-3 rounded-xl transition">
+            Status
+        </button>
     </div>
 
-    <!-- Pekerjaan -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 lg:col-span-2">
-        <h3 class="text-lg font-semibold mb-4 text-gray-900">
-            <i class="fas fa-briefcase text-orange-600 mr-2"></i>Pekerjaan (Top 10)
-        </h3>
-        <div style="height: 350px;">
-            <canvas id="pekerjaanChart"></canvas>
+    <!-- Chart Container -->
+    <div class="bg-white rounded-2xl shadow-xl p-8">
+        <!-- Distribusi Umur Chart -->
+        <div id="chart-umur" class="chart-section">
+            <h3 class="text-2xl font-bold text-center mb-8">Distribusi Umur</h3>
+            <div style="height: 400px; max-width: 600px; margin: 0 auto;">
+                <canvas id="umurChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Pendidikan Terakhir Chart -->
+        <div id="chart-pendidikan" class="chart-section hidden">
+            <h3 class="text-2xl font-bold text-center mb-8">Pendidikan Terakhir</h3>
+            <div style="height: 400px; max-width: 600px; margin: 0 auto;">
+                <canvas id="pendidikanChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Pekerjaan Chart -->
+        <div id="chart-pekerjaan" class="chart-section hidden">
+            <h3 class="text-2xl font-bold text-center mb-8">Pekerjaan</h3>
+            <div style="height: 400px; max-width: 600px; margin: 0 auto;">
+                <canvas id="pekerjaanChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Status Perkawinan Chart -->
+        <div id="chart-status" class="chart-section hidden">
+            <h3 class="text-2xl font-bold text-center mb-8">Status Perkawinan</h3>
+            <div style="height: 400px; max-width: 600px; margin: 0 auto;">
+                <canvas id="statusChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -59,20 +70,29 @@
     const pekerjaanData = {!! $pekerjaanChart !!};
     
     // Warna untuk charts
-    const pieColors = [
-        '#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#3B82F6', '#6B7280',
-        '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'
+    const colors = [
+        '#3B82F6', // Blue
+        '#10B981', // Green
+        '#F59E0B', // Orange
+        '#EF4444', // Red
+        '#8B5CF6', // Purple
+        '#EC4899', // Pink
     ];
 
-    // 1. Grafik Status Perkawinan (Pie)
-    const ctxStatus = document.getElementById('statusChart').getContext('2d');
-    new Chart(ctxStatus, {
-        type: 'pie',
+    // Chart instances
+    let umurChartInstance, pendidikanChartInstance, pekerjaanChartInstance, statusChartInstance;
+
+    // 1. Grafik Distribusi Umur (Pie)
+    const ctxUmur = document.getElementById('umurChart').getContext('2d');
+    umurChartInstance = new Chart(ctxUmur, {
+        type: 'doughnut',
         data: {
-            labels: statusData.labels,
+            labels: umurData.labels,
             datasets: [{
-                data: statusData.values,
-                backgroundColor: pieColors,
+                data: umurData.values,
+                backgroundColor: colors,
+                borderWidth: 2,
+                borderColor: '#fff'
             }]
         },
         options: {
@@ -81,20 +101,40 @@
             plugins: {
                 legend: {
                     position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
                 }
             }
         }
     });
 
-    // 2. Grafik Pendidikan (Doughnut)
+    // 2. Grafik Pendidikan (Pie)
     const ctxPendidikan = document.getElementById('pendidikanChart').getContext('2d');
-    new Chart(ctxPendidikan, {
+    pendidikanChartInstance = new Chart(ctxPendidikan, {
         type: 'doughnut',
         data: {
             labels: pendidikanData.labels,
             datasets: [{
                 data: pendidikanData.values,
-                backgroundColor: pieColors,
+                backgroundColor: colors,
+                borderWidth: 2,
+                borderColor: '#fff'
             }]
         },
         options: {
@@ -103,79 +143,137 @@
             plugins: {
                 legend: {
                     position: 'bottom',
-                }
-            }
-        }
-    });
-
-    // 3. Grafik Rentang Umur (Bar)
-    const ctxUmur = document.getElementById('umurChart').getContext('2d');
-    new Chart(ctxUmur, {
-        type: 'bar',
-        data: {
-            labels: umurData.labels,
-            datasets: [{
-                label: 'Jumlah Penduduk',
-                data: umurData.values,
-                backgroundColor: '#3B82F6',
-                borderColor: '#1D4ED8',
-                borderWidth: 1,
-                borderRadius: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
+                    labels: {
+                        padding: 20,
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
                     }
                 }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                }
             }
         }
     });
 
-    // 4. Grafik Pekerjaan (Bar Horizontal)
+    // 3. Grafik Pekerjaan (Pie)
     const ctxPekerjaan = document.getElementById('pekerjaanChart').getContext('2d');
-    new Chart(ctxPekerjaan, {
-        type: 'bar',
+    pekerjaanChartInstance = new Chart(ctxPekerjaan, {
+        type: 'doughnut',
         data: {
             labels: pekerjaanData.labels,
             datasets: [{
-                label: 'Jumlah Penduduk',
                 data: pekerjaanData.values,
-                backgroundColor: '#10B981',
-                borderColor: '#059669',
-                borderWidth: 1,
-                borderRadius: 8
+                backgroundColor: colors,
+                borderWidth: 2,
+                borderColor: '#fff'
             }]
         },
         options: {
-            indexAxis: 'y',
             responsive: true,
             maintainAspectRatio: false,
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1
-                    }
-                }
-            },
             plugins: {
                 legend: {
-                    display: false
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
                 }
             }
         }
     });
+
+    // 4. Grafik Status Perkawinan (Pie)
+    const ctxStatus = document.getElementById('statusChart').getContext('2d');
+    statusChartInstance = new Chart(ctxStatus, {
+        type: 'doughnut',
+        data: {
+            labels: statusData.labels,
+            datasets: [{
+                data: statusData.values,
+                backgroundColor: colors,
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        font: {
+                            size: 12,
+                            weight: 'bold'
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.parsed || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Function to show chart
+    function showChart(chartName) {
+        // Hide all charts
+        document.querySelectorAll('.chart-section').forEach(section => {
+            section.classList.add('hidden');
+        });
+
+        // Remove active state from all buttons
+        document.querySelectorAll('button[id^="btn-"]').forEach(btn => {
+            btn.classList.remove('bg-teal-500', 'text-white');
+            btn.classList.add('bg-white', 'text-gray-900');
+        });
+
+        // Show selected chart
+        document.getElementById(`chart-${chartName}`).classList.remove('hidden');
+
+        // Add active state to selected button
+        const activeBtn = document.getElementById(`btn-${chartName}`);
+        activeBtn.classList.remove('bg-white', 'text-gray-900');
+        activeBtn.classList.add('bg-teal-500', 'text-white');
+    }
+
+    // Initialize with Umur chart visible
+    showChart('umur');
 </script>
 @endpush
 @endsection

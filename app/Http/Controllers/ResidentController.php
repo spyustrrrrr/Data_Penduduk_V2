@@ -49,7 +49,7 @@ class ResidentController extends Controller
             $query->where('pendidikan', $request->pendidikan);
         }
 
-        $residents = $query->paginate(15)->appends($request->query());
+        $residents = $query->paginate(7)->appends($request->query());
         $kks = KK::all();
 
         return view('residents.index', compact('residents', 'kks'));
