@@ -11,64 +11,120 @@
 
     <!-- Category Buttons -->
     <div class="flex gap-4">
-        <button onclick="showChart('umur')" id="btn-umur" class="bg-teal-500 hover:bg-teal-600 text-white font-bold px-6 py-3 rounded-xl transition">
+        <button onclick="showChart('umur')" id="btn-umur" class="bg-white hover:bg-sky-700 text-gray-700 font-bold px-6 py-3 rounded-xl transition">
             Umur
         </button>
-        <button onclick="showChart('pendidikan')" id="btn-pendidikan" class="bg-white hover:bg-gray-100 text-gray-900 font-bold px-6 py-3 rounded-xl transition">
+        <button onclick="showChart('pendidikan')" id="btn-pendidikan" class="bg-white hover:bg-sky-700 text-gray-700 font-bold px-6 py-3 rounded-xl transition">
             Pendidikan
         </button>
-        <button onclick="showChart('pekerjaan')" id="btn-pekerjaan" class="bg-white hover:bg-gray-100 text-gray-900 font-bold px-6 py-3 rounded-xl transition">
+        <button onclick="showChart('pekerjaan')" id="btn-pekerjaan" class="bg-white hover:bg-sky-700 text-gray-700 font-bold px-6 py-3 rounded-xl transition">
             Pekerjaan
         </button>
-        <button onclick="showChart('status')" id="btn-status" class="bg-white hover:bg-gray-100 text-gray-900 font-bold px-6 py-3 rounded-xl transition">
+        <button onclick="showChart('status')" id="btn-status" class="bg-white hover:bg-sky-700 text-gray-700 font-bold px-6 py-3 rounded-xl transition">
             Status
         </button>
     </div>
 
     <!-- Chart Container -->
-    <div class="bg-white rounded-2xl shadow-xl p-8">
-        <!-- Distribusi Umur Chart -->
+    <div class="bg-white rounded-2xl shadow-2xl p-8">
+
+    <!-- Template Chart + Description -->
         <div id="chart-umur" class="chart-section">
-            <h3 class="text-2xl font-bold text-center mb-8">Distribusi Umur</h3>
-            <div style="height: 400px; max-width: 600px; margin: 0 auto;">
-                <canvas id="umurChart"></canvas>
+            <div class="flex flex-row gap-6">
+                <div class="w-1/3 flex flex-col justify-start">
+                    @php $umurData = json_decode($umurChart, true); @endphp
+                    <h3 class="text-2xl font-bold mb-4">Data Umur warga</h3>
+                    <p class="text-gray-700 leading-relaxed mb-4">Grafik ini menggambarkan sebaran warga berdasarkan kelompok usia dengan detail sebagai berikut: .</p>
+                    <ul class="text-gray-800 space-y-1 text-md">
+                        @foreach($umurData['labels'] as $i => $label)
+                            <li><strong>{{ $label }}</strong>: {{ $umurData['values'][$i] }} orang</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div class="w-2/3 min-h-[350px]"><div id="umurChart"></div></div>
             </div>
         </div>
 
-        <!-- Pendidikan Terakhir Chart -->
-        <div id="chart-pendidikan" class="chart-section hidden">
-            <h3 class="text-2xl font-bold text-center mb-8">Pendidikan Terakhir</h3>
-            <div style="height: 400px; max-width: 600px; margin: 0 auto;">
-                <canvas id="pendidikanChart"></canvas>
-            </div>
-        </div>
 
-        <!-- Pekerjaan Chart -->
-        <div id="chart-pekerjaan" class="chart-section hidden">
-            <h3 class="text-2xl font-bold text-center mb-8">Pekerjaan</h3>
-            <div style="height: 400px; max-width: 600px; margin: 0 auto;">
-                <canvas id="pekerjaanChart"></canvas>
-            </div>
-        </div>
 
-        <!-- Status Perkawinan Chart -->
-        <div id="chart-status" class="chart-section hidden">
-            <h3 class="text-2xl font-bold text-center mb-8">Status Perkawinan</h3>
-            <div style="height: 400px; max-width: 600px; margin: 0 auto;">
-                <canvas id="statusChart"></canvas>
+
+    <!-- Pendidikan -->
+    <div id="chart-pendidikan" class="chart-section hidden">
+        <div class="flex flex-row gap-6">
+            <div class="w-1/3 flex flex-col justify-start">
+                <h3 class="text-2xl font-bold mb-4">Data Pendidikan Warga</h3>
+                <p class="text-gray-700 leading-relaxed mb-4">Grafik ini menggambarkan sebaran warga berdasarkan Tingkat Pendidikan Warga dengan detail sebagai berikut: </p>
+
+                @php $pendidikanData = json_decode($pendidikanChart, true); @endphp
+
+                <ul class="text-gray-800 space-y-1 text-md">
+                    @foreach($pendidikanData['labels'] as $i => $label)
+                        <li><strong>{{ $label }}</strong>: {{ $pendidikanData['values'][$i] }} orang</li>
+                    @endforeach
+                </ul>
+            </div>
+            <div class="w-2/3 min-h-[350px]">
+                <div id="pendidikanChart"></div>
             </div>
         </div>
     </div>
+
+    <!-- Pekerjaan -->
+    <div id="chart-pekerjaan" class="chart-section hidden">
+        <div class="flex flex-row gap-6">
+            <div class="w-1/3 flex flex-col justify-start">
+                <h3 class="text-2xl font-bold mb-4">Data Pekerjaan Warga</h3>
+                <p class="text-gray-700 leading-relaxed mb-4">Grafik ini menggambarkan sebaran warga berdasarkan kelompok jenis pekerjaan warga dengan detail sebagai berikut: </p>
+
+                @php $pekerjaandata = json_decode($pekerjaanChart, true); @endphp
+
+                <ul class="text-gray-800 space-y-1 text-md">
+                    @foreach($pekerjaandata['labels'] as $i => $label)
+                        <li><strong>{{ $label }}</strong>: {{ $pekerjaandata['values'][$i] }} orang</li>
+                    @endforeach
+                </ul>
+            </div>
+            <div class="w-2/3 min-h-[350px]">
+                <div id="pekerjaanChart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Perkawinan -->
+    <div id="chart-status" class="chart-section hidden">
+        <div class="flex flex-row gap-6">
+            <div class="w-1/3 flex flex-col justify-start">
+                <h3 class="text-2xl font-bold mb-4">Data Status Pernikahan Warga</h3>
+                <p class="text-gray-700 leading-relaxed mb-4">Grafik ini menggambarkan sebaran warga berdasarkan Status Pernikahan Warga dengan detail sebagai berikut: </p>
+
+                @php $statusData = json_decode($statusChart, true); @endphp
+
+                <ul class="text-gray-800 space-y-1 text-md">
+                    @foreach($statusData['labels'] as $i => $label)
+                        <li><strong>{{ $label }}</strong>: {{ $statusData['values'][$i] }} orang</li>
+                    @endforeach
+                </ul>
+            </div>
+            <div class="w-2/3 min-h-[350px]">
+                <div id="statusChart"></div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
+</div>
+
+
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
     // Data dari controller
     const statusData = {!! $statusChart !!};
     const pendidikanData = {!! $pendidikanChart !!};
     const umurData = {!! $umurChart !!};
     const pekerjaanData = {!! $pekerjaanChart !!};
-    
+
     // Warna untuk charts
     const colors = [
         '#3B82F6', // Blue
@@ -80,199 +136,135 @@
     ];
 
     // Chart instances
-    let umurChartInstance, pendidikanChartInstance, pekerjaanChartInstance, statusChartInstance;
-
-    // 1. Grafik Distribusi Umur (Pie)
-    const ctxUmur = document.getElementById('umurChart').getContext('2d');
-    umurChartInstance = new Chart(ctxUmur, {
-        type: 'doughnut',
-        data: {
+// === 1. UMUR ===
+    let umurChartInstance = new ApexCharts(
+        document.querySelector("#umurChart"),{
+            series: umurData.values,
+            chart: {type: 'donut',height: 450},
             labels: umurData.labels,
-            datasets: [{
-                data: umurData.values,
-                backgroundColor: colors,
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        font: {
-                            size: 12,
-                            weight: 'bold'
-                        }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = context.parsed || 0;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return `${label}: ${value} (${percentage}%)`;
+            colors: colors,
+            legend: { position: 'right', fontSize: '24px', gap: '5px',
+                markers: { width: 16, height: 16},
+                itemMargin: { vertical: 5},
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        labels: {
+                            show: true,
+                            total: {show: true,label: 'Total',fontSize: '22px',fontWeight: 600,color: '#333',
+                            formatter: function(w) {return w.globals.seriesTotals.reduce((a, b) => a + b, 0);}
+                            }
                         }
                     }
                 }
             }
         }
-    });
+    );
+    umurChartInstance.render();   // << INI YANG KAMU MAKSUDKAN "RENDER"
 
-    // 2. Grafik Pendidikan (Pie)
-    const ctxPendidikan = document.getElementById('pendidikanChart').getContext('2d');
-    pendidikanChartInstance = new Chart(ctxPendidikan, {
-        type: 'doughnut',
-        data: {
+     // === 2. PENDIDIKAN ===
+    let pendidikanChartInstance = new ApexCharts(
+        document.querySelector("#pendidikanChart"),
+        {
+            series: pendidikanData.values,
+            chart: { type: 'donut', height: 450 },
             labels: pendidikanData.labels,
-            datasets: [{
-                data: pendidikanData.values,
-                backgroundColor: colors,
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        font: {
-                            size: 12,
-                            weight: 'bold'
-                        }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = context.parsed || 0;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return `${label}: ${value} (${percentage}%)`;
+            colors: colors,
+                        legend: { position: 'right', fontSize: '24px', gap: '5px',
+                markers: { width: 16, height: 16},
+                itemMargin: {  vertical: 5},
+            },
+                        plotOptions: {
+                pie: {
+                    donut: {
+                        labels: {
+                            show: true,
+                            total: {show: true,label: 'Total',fontSize: '22px',fontWeight: 600,color: '#333',
+                            formatter: function(w) {return w.globals.seriesTotals.reduce((a, b) => a + b, 0);}
+                            }
                         }
                     }
                 }
             }
         }
-    });
+    );
+    pendidikanChartInstance.render();
 
-    // 3. Grafik Pekerjaan (Pie)
-    const ctxPekerjaan = document.getElementById('pekerjaanChart').getContext('2d');
-    pekerjaanChartInstance = new Chart(ctxPekerjaan, {
-        type: 'doughnut',
-        data: {
+    // === 3. PEKERJAAN ===
+    let pekerjaanChartInstance = new ApexCharts(
+        document.querySelector("#pekerjaanChart"),
+        {
+            series: pekerjaanData.values,
+            chart: { type: 'donut', height: 450 },
             labels: pekerjaanData.labels,
-            datasets: [{
-                data: pekerjaanData.values,
-                backgroundColor: colors,
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        font: {
-                            size: 12,
-                            weight: 'bold'
-                        }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = context.parsed || 0;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return `${label}: ${value} (${percentage}%)`;
+            colors: colors,
+            legend: { position: 'right', fontSize: '24px', gap: '5px',
+                markers: { width: 16, height: 16},
+                itemMargin: { vertical: 5},
+            },
+                        plotOptions: {
+                pie: {
+                    donut: {
+                        labels: {
+                            show: true,
+                            total: {show: true,label: 'Total',fontSize: '22px',fontWeight: 600,color: '#333',
+                            formatter: function(w) {return w.globals.seriesTotals.reduce((a, b) => a + b, 0);}
+                            }
                         }
                     }
                 }
             }
         }
-    });
+    );
+    pekerjaanChartInstance.render();
 
-    // 4. Grafik Status Perkawinan (Pie)
-    const ctxStatus = document.getElementById('statusChart').getContext('2d');
-    statusChartInstance = new Chart(ctxStatus, {
-        type: 'doughnut',
-        data: {
+    // === 4. STATUS PERKAWINAN ===
+    let statusChartInstance = new ApexCharts(
+        document.querySelector("#statusChart"),
+        {
+            series: statusData.values,
+            chart: { type: 'donut', height: 450 },
             labels: statusData.labels,
-            datasets: [{
-                data: statusData.values,
-                backgroundColor: colors,
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        font: {
-                            size: 12,
-                            weight: 'bold'
-                        }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = context.parsed || 0;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return `${label}: ${value} (${percentage}%)`;
+            colors: colors,
+            legend: { position: 'right', fontSize: '24px', gap: '5px',
+                markers: { width: 16, height: 16},
+                itemMargin: { vertical: 5},
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        labels: {
+                            show: true,
+                            total: {show: true,label: 'Total',fontSize: '22px',fontWeight: 600,color: '#333',
+                            formatter: function(w) {return w.globals.seriesTotals.reduce((a, b) => a + b, 0);}
+                            }
                         }
                     }
                 }
             }
         }
-    });
+    );
+    statusChartInstance.render();
 
-    // Function to show chart
+     // === FUNGSI SHOW CHART TETAP SAMA ===
     function showChart(chartName) {
-        // Hide all charts
         document.querySelectorAll('.chart-section').forEach(section => {
             section.classList.add('hidden');
         });
 
-        // Remove active state from all buttons
         document.querySelectorAll('button[id^="btn-"]').forEach(btn => {
-            btn.classList.remove('bg-teal-500', 'text-white');
+            btn.classList.remove('bg-sky-800', 'text-white');
             btn.classList.add('bg-white', 'text-gray-900');
         });
 
-        // Show selected chart
         document.getElementById(`chart-${chartName}`).classList.remove('hidden');
 
-        // Add active state to selected button
         const activeBtn = document.getElementById(`btn-${chartName}`);
         activeBtn.classList.remove('bg-white', 'text-gray-900');
-        activeBtn.classList.add('bg-teal-500', 'text-white');
+        activeBtn.classList.add('bg-sky-800', 'text-white');
     }
 
-    // Initialize with Umur chart visible
     showChart('umur');
 </script>
 @endpush

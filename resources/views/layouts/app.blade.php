@@ -9,22 +9,22 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #7abbf5 0%, #2ca8f0 100%);
             min-height: 100vh;
         }
-        
+
         .sidebar {
             background: linear-gradient(180deg, #1e3a5f 0%, #0f2847 100%);
         }
-        
+
         .nav-item {
             transition: all 0.3s ease;
         }
-        
+
         .nav-item:hover {
             background-color: rgba(59, 130, 246, 0.2);
         }
-        
+
         .nav-item.active {
             background-color: rgba(59, 130, 246, 0.3);
         }
@@ -34,20 +34,20 @@
     <div class="flex min-h-screen">
         <!-- Sidebar -->
         <aside class="sidebar w-64 text-white shadow-2xl flex flex-col fixed h-full z-50">
-            <!-- Close Button for Mobile -->
-            <button id="closeSidebar" class="lg:hidden absolute top-4 right-4 text-white">
-                <i class="fas fa-times text-2xl"></i>
-            </button>
-            
+            <!-- Close Button (always visible) -->
+
             <!-- Logo Section -->
             <div class="p-6 border-b border-white/20">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
-                        <i class="fas fa-users text-blue-900 text-2xl"></i>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-sky-800 rounded-xl flex items-center justify-center">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo GERGAJI" class="w-full h-full object-contain rounded-full">
                     </div>
                     <div>
                         <h1 class="text-2xl font-bold">Gergaji</h1>
                     </div>
+                    <button id="closeSidebar" class=" text-white ms-3">
+                        <i class="fas fa-times text-4xl"></i>
+                    </button>
                 </div>
             </div>
 
@@ -77,6 +77,12 @@
 
             <!-- Logout Button -->
             <div class="p-4 border-t border-white/20">
+                @auth
+                    <div class="mb-3 px-4">
+                        <span class="text-2xl capitalize font-bold">Username :  </span><span class="font-semibold text-white text-2xl capitalize">{{ auth()->user()->name }}</span>
+                    </div>
+                @endauth
+
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-white bg-red-600 hover:bg-red-700 transition">
@@ -89,9 +95,9 @@
 
         <!-- Main Content -->
         <main class="flex-1 ml-64 p-8">
-            <!-- Mobile Menu Button -->
-            <button id="openSidebar" class="lg:hidden fixed top-4 left-4 z-40 bg-white rounded-lg p-3 shadow-lg">
-                <i class="fas fa-bars text-gray-900 text-xl"></i>
+            <!-- Mobile Menu Button (always visible) -->
+            <button id="openSidebar" class="fixed top-5 left-5 z-40 bg-sky-800 rounded-3xl px-5 py-4 shadow-lg">
+                <i class="fas fa-bars text-white text-3xl"></i>
             </button>
 
             <!-- Content Area -->
@@ -143,7 +149,7 @@
             sidebar.classList.add('hidden');
         });
     </script>
-    
+
     @stack('scripts')
 </body>
 </html>

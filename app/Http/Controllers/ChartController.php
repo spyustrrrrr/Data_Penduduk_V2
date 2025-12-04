@@ -63,7 +63,7 @@ class ChartController extends Controller
             ->orderByRaw("MIN(TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()))")
             ->get();
         $umurChart = $this->formatChartData($umurData, 'rentang_umur');
-        
+
         // 4. Data Grafik Pekerjaan (Bar Chart - Top 10)
         $pekerjaanData = DB::table('residents')
             ->where('pekerjaan', '!=', '') // Abaikan string kosong
