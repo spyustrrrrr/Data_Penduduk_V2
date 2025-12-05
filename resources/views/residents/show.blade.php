@@ -52,7 +52,7 @@
                 </div>
                 <div>
                     <dt class="text-sm font-semibold text-gray-600">Tanggal Lahir</dt>
-                    <dd class="text-lg text-gray-900">{{ $resident->tanggal_lahir->format('d M Y') }}</dd>
+                    <dd class="text-lg text-gray-900">{{ optional($resident->tanggal_lahir)->format('d M Y') }}</dd>
                 </div>
                 <div>
                     <dt class="text-sm font-semibold text-gray-600">Jenis Kelamin</dt>

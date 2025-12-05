@@ -79,7 +79,7 @@
                             <option value="O-" {{ old('golongan_darah', $resident->golongan_darah) == 'O-' ? 'selected' : '' }}>O-</option>
                         </select>
                     </div>
-                    
+
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Tempat Lahir <span class="text-red-600">*</span></label>
                         <input type="text" name="tempat_lahir" required value="{{ old('tempat_lahir', $resident->tempat_lahir) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition" placeholder="Kota/Kabupaten">
@@ -88,7 +88,7 @@
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Lahir <span class="text-red-600">*</span></label>
-                        <input type="date" name="tanggal_lahir" required value="{{ old('tanggal_lahir', $resident->tanggal_lahir->format('Y-m-d')) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition">
+                        <input type="date" name="tanggal_lahir" required value="{{ old('tanggal_lahir', optional($resident->tanggal_lahir)->format('Y-m-d')) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition">
                         @error('tanggal_lahir') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
 

@@ -6,6 +6,7 @@ use App\Models\Resident;
 use App\Models\KK;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ResidentController extends Controller
 {
@@ -17,17 +18,25 @@ class ResidentController extends Controller
         $query = Resident::with('kk');
 
         // Search
-        if ($request->filled('search')) {
-            $search = $request->search;
-            // Memastikan join hanya dilakukan sekali jika ada search
-            $query->join('kks', 'residents.kk_id', '=', 'kks.id')
-                  ->where(function ($q) use ($search) {
-                      $q->where('residents.nama', 'like', "%$search%")
-                        ->orWhere('residents.nik', 'like', "%$search%")
-                        ->orWhere('kks.no_kk', 'like', "%$search%");
-                  })
-                  ->select('residents.*'); // Penting untuk menghindari konflik kolom 'id'
-        }
+if ($request->filled('search')) {
+    $search = $request->search;
+
+    $query->where(function ($q) use ($search) {
+        $q->where('residents.nama', 'like', "%$search%")
+          ->orWhere('residents.nik', 'like', "%$search%")
+          ->orWhere('residents.alamat', 'like', "%$search%")
+          ->orWhere('residents.pekerjaan', 'like', "%$search%")
+          ->orWhere('residents.tempat_lahir', 'like', "%$search%")
+          ->orWhere('residents.riwayat_penyakit', 'like', "%$search%")
+          ->orWhere('residents.email', 'like', "%$search%")
+          ->orWhere('residents.no_telepon', 'like', "%$search%")
+          ->orWhere('residents.nama_ayah', 'like', "%$search%")
+          ->orWhere('residents.nama_ibu', 'like', "%$search%");
+    })
+    ->orWhereHas('kk', function ($k) use ($search) {
+        $k->where('no_kk', 'like', "%$search%");
+    });
+}
 
         // Filter by jenis_kelamin
         if ($request->filled('jenis_kelamin')) {
@@ -43,10 +52,91 @@ class ResidentController extends Controller
         if ($request->filled('agama')) {
             $query->where('agama', $request->agama);
         }
-        
-        // [BARU] Filter by pendidikan
+
+        // Filter by pendidikan
         if ($request->filled('pendidikan')) {
             $query->where('pendidikan', $request->pendidikan);
+        }
+
+
+
+        // Filter by golongan darah
+        if ($request->filled('golongan_darah')) {
+            $query->where('golongan_darah', $request->golongan_darah);
+        }
+
+        // Filter by cek kesehatan
+        if ($request->filled('cek_kesehatan')) {
+            $query->where('cek_kesehatan', $request->cek_kesehatan);
+        }
+
+        // Filter by keinginan menambah anak (tambah_anak)
+        if ($request->filled('tambah_anak')) {
+            $query->where('tambah_anak', $request->tambah_anak);
+        }
+
+        // Filter by asuransi kesehatan
+        if ($request->filled('asuransi_kesehatan')) {
+            $query->where('asuransi_kesehatan', $request->asuransi_kesehatan);
+        }
+
+        // Filter by alat kontrasepsi
+        if ($request->filled('alat_kontrasepsi')) {
+            $query->where('alat_kontrasepsi', $request->alat_kontrasepsi);
+        }
+
+        if ($request->filled('bpjs_ketenagakerjaan')) {
+            $query->where('bpjs_ketenagakerjaan', $request->bpjs_ketenagakerjaan);
+        }
+
+        if ($request->filled('status_merokok')) {
+            $query->where('status_merokok', $request->status_merokok);
+        }
+
+        if ($request->filled('jumlah_anak')) {
+            $query->where('jumlah_anak', $request->jumlah_anak);
+        }
+
+        // Filter by BPJS Ketenagakerjaan
+        if ($request->filled('bpjs_ketenagakerjaan')) {
+            $query->where('bpjs_ketenagakerjaan', $request->bpjs_ketenagakerjaan);
+        }
+
+        // Filter by status merokok
+        if ($request->filled('status_merokok')) {
+            $query->where('status_merokok', $request->status_merokok);
+        }
+
+
+
+        // Filter by age range (umur)
+        if ($request->filled('age_from') || $request->filled('age_to')) {
+            $today = Carbon::today();
+
+            if ($request->filled('age_from') && $request->filled('age_to')) {
+                $ageFrom = (int) $request->age_from;
+                $ageTo = (int) $request->age_to;
+                if ($ageFrom > $ageTo) {
+                    [$ageFrom, $ageTo] = [$ageTo, $ageFrom];
+                }
+
+                // ageFrom = minimum age, ageTo = maximum age
+                // tanggal_lahir between (today - ageTo years) and (today - ageFrom years)
+                $dateOlder = $today->copy()->subYears($ageTo)->endOfDay();
+                $dateYounger = $today->copy()->subYears($ageFrom)->startOfDay();
+
+                $query->whereBetween('tanggal_lahir', [$dateOlder, $dateYounger]);
+            } elseif ($request->filled('age_from')) {
+                $ageFrom = (int) $request->age_from;
+                $dateYounger = $today->copy()->subYears($ageFrom)->startOfDay();
+                // umur >= age_from -> tanggal_lahir <= dateYounger
+                $query->where('tanggal_lahir', '<=', $dateYounger);
+            } else {
+                $ageTo = (int) $request->age_to;
+                $dateOlder = $today->copy()->subYears($ageTo)->endOfDay();
+                // umur <= age_to -> tanggal_lahir >= dateOlder
+                $query->where('tanggal_lahir', '>=', $dateOlder);
+            }
         }
 
         $residents = $query->paginate(7)->appends($request->query());
@@ -77,12 +167,12 @@ class ResidentController extends Controller
             'tanggal_lahir' => 'required|date',
             'tempat_lahir' => 'required|string',
             'alamat' => 'required|string|max:255',
-            
+
             // Aturan validasi yang diperbarui
             'status_perkawinan' => 'required|in:Belum Menikah,Menikah,Janda,Duda',
             'agama' => 'required|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',
             'pendidikan' => 'nullable|in:SD,SMP,SMA/SMK,D1/D2/D3,S1/D4,S2,S3',
-            
+
             'pekerjaan' => 'nullable|string',
             'no_telepon' => 'nullable|string',
             'email' => 'nullable|email|unique:residents',
@@ -210,13 +300,31 @@ class ResidentController extends Controller
             $query->where('pendidikan', $request->pendidikan);
         }
 
+        // apply same additional filters in export
+        if ($request->filled('golongan_darah')) {
+            $query->where('golongan_darah', $request->golongan_darah);
+        }
+        if ($request->filled('cek_kesehatan')) {
+            $query->where('cek_kesehatan', $request->cek_kesehatan);
+        }
+        if ($request->filled('tambah_anak')) {
+            $query->where('tambah_anak', $request->tambah_anak);
+        }
+        if ($request->filled('asuransi_kesehatan')) {
+            $query->where('asuransi_kesehatan', $request->asuransi_kesehatan);
+        }
+        if ($request->filled('alat_kontrasepsi')) {
+            $query->where('alat_kontrasepsi', $request->alat_kontrasepsi);
+        }
+
         $residents = $query->get();
 
         // [UPDATE] Menambahkan kolom baru ke CSV
         $csv = "NIK,Nama,Jenis Kelamin,Tanggal Lahir,Tempat Lahir,Status Perkawinan,Agama,Pendidikan,Pekerjaan,Nama Ayah,Nama Ibu,Gol. Darah,No. KK\n";
 
         foreach ($residents as $resident) {
-            $csv .= "\"{$resident->nik}\",\"{$resident->nama}\",\"{$resident->jenis_kelamin}\",\"{$resident->tanggal_lahir->format('Y-m-d')}\",\"{$resident->tempat_lahir}\",\"{$resident->status_perkawinan}\",\"{$resident->agama}\",\"{$resident->pendidikan}\",\"{$resident->pekerjaan}\",\"{$resident->nama_ayah}\",\"{$resident->nama_ibu}\",\"{$resident->golongan_darah}\",\"{$resident->kk->no_kk}\"\n";
+            $dob = optional($resident->tanggal_lahir)->format('Y-m-d');
+            $csv .= "\"{$resident->nik}\",\"{$resident->nama}\",\"{$resident->jenis_kelamin}\",\"{$dob}\",\"{$resident->tempat_lahir}\",\"{$resident->status_perkawinan}\",\"{$resident->agama}\",\"{$resident->pendidikan}\",\"{$resident->pekerjaan}\",\"{$resident->nama_ayah}\",\"{$resident->nama_ibu}\",\"{$resident->golongan_darah}\",\"{$resident->kk->no_kk}\"\n";
         }
 
         return response($csv, 200, [
