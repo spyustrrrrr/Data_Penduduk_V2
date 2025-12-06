@@ -5,7 +5,7 @@
 @section('content')
 <div class="bg-gradient-to-br from-blue-50 to-white rounded-2xl shadow-xl p-8">
     <div class="mb-8 text-center">
-        <h3 class="text-3xl font-bold text-gray-900">INPUT WARGA DIBAWAH INI</h3>
+        <h3 class="text-3xl font-bold text-gray-900">ENTRY DATA WARGA DIBAWAH INI</h3>
     </div>
 
     <form method="POST" action="{{ route('residents.store') }}" class="space-y-6">
@@ -15,39 +15,39 @@
             <!-- NO. KARTU KELUARGA -->
             <div>
                 <label class="block text-sm font-bold text-gray-900 mb-2">NO. KARTU KELUARGA</label>
-                <input type="text" name="kk_id" required value="{{ old('kk_id') }}" 
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" 
+                <input type="text" name="kk_id" required value="{{ old('kk_id') }}"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     placeholder="ketik disini">
             </div>
 
             <!-- NOMOR INDUK KEPENDUDUKAN -->
             <div>
                 <label class="block text-sm font-bold text-gray-900 mb-2">NOMOR INDUK KEPENDUDUKAN</label>
-                <input type="text" name="nik" required value="{{ old('nik') }}" 
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" 
+                <input type="text" name="nik" required value="{{ old('nik') }}"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     placeholder="ketik disini">
             </div>
 
             <!-- NAMA -->
             <div>
                 <label class="block text-sm font-bold text-gray-900 mb-2">NAMA</label>
-                <input type="text" name="nama" required value="{{ old('nama') }}" 
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" 
+                <input type="text" name="nama" required value="{{ old('nama') }}"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     placeholder="ketik disini">
             </div>
 
             <!-- TEMPAT LAHIR -->
             <div>
                 <label class="block text-sm font-bold text-gray-900 mb-2">TEMPAT LAHIR</label>
-                <input type="text" name="tempat_lahir" required value="{{ old('tempat_lahir') }}" 
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" 
+                <input type="text" name="tempat_lahir" required value="{{ old('tempat_lahir') }}"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     placeholder="ketik disini">
             </div>
 
             <!-- TANGGAL LAHIR -->
             <div>
                 <label class="block text-sm font-bold text-gray-900 mb-2">TANGGAL LAHIR</label>
-                <input type="date" name="tanggal_lahir" required value="{{ old('tanggal_lahir') }}" 
+                <input type="date" name="tanggal_lahir" required value="{{ old('tanggal_lahir') }}"
                     class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
             </div>
 
@@ -114,8 +114,8 @@
             <!-- PEKERJAAN -->
             <div>
                 <label class="block text-sm font-bold text-gray-900 mb-2">PEKERJAAN</label>
-                <input type="text" name="pekerjaan" value="{{ old('pekerjaan') }}" 
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" 
+                <input type="text" name="pekerjaan" value="{{ old('pekerjaan') }}"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     placeholder="ketik disini">
             </div>
 
@@ -129,7 +129,7 @@
                     </label>
                     <label class="flex items-center gap-2 cursor-pointer bg-gray-100 px-6 py-3 rounded-lg">
                         <input type="radio" name="status_merokok" value="TIDAK MEROKOK" checked class="w-4 h-4">
-                        <span class="font-semibold">TIDAK ✓</span>
+                        <span class="font-semibold">TIDAK</span>
                     </label>
                 </div>
             </div>
@@ -137,24 +137,24 @@
             <!-- NAMA AYAH -->
             <div>
                 <label class="block text-sm font-bold text-gray-900 mb-2">NAMA AYAH</label>
-                <input type="text" name="nama_ayah" value="{{ old('nama_ayah') }}" 
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" 
+                <input type="text" name="nama_ayah" value="{{ old('nama_ayah') }}"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     placeholder="ketik disini">
             </div>
 
             <!-- NAMA IBU -->
             <div>
                 <label class="block text-sm font-bold text-gray-900 mb-2">NAMA IBU</label>
-                <input type="text" name="nama_ibu" value="{{ old('nama_ibu') }}" 
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" 
+                <input type="text" name="nama_ibu" value="{{ old('nama_ibu') }}"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     placeholder="ketik disini atau -- jika tidak ada">
             </div>
 
             <!-- RIWAYAT PENYAKIT -->
             <div class="md:col-span-2">
                 <label class="block text-sm font-bold text-gray-900 mb-2">RIWAYAT PENYAKIT</label>
-                <textarea name="riwayat_penyakit" rows="3" 
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" 
+                <textarea name="riwayat_penyakit" rows="3"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     placeholder="ketik disini atau -- jika tidak ada">{{ old('riwayat_penyakit') }}</textarea>
             </div>
 
@@ -193,7 +193,7 @@
                     </label>
                     <label class="flex items-center gap-2 cursor-pointer bg-gray-100 px-6 py-3 rounded-lg">
                         <input type="radio" name="bpjs_ketenagakerjaan" value="TIDAK MEMILIKI" class="w-4 h-4">
-                        <span class="font-semibold">TIDAK ✓</span>
+                        <span class="font-semibold">TIDAK</span>
                     </label>
                 </div>
             </div>
@@ -208,7 +208,7 @@
                     </label>
                     <label class="flex items-center gap-2 cursor-pointer bg-gray-100 px-6 py-3 rounded-lg">
                         <input type="radio" name="tambah_anak" value="TIDAK" class="w-4 h-4">
-                        <span class="font-semibold">TIDAK ✓</span>
+                        <span class="font-semibold">TIDAK</span>
                     </label>
                 </div>
             </div>
@@ -216,7 +216,7 @@
             <!-- JUMLAH ANAK -->
             <div>
                 <label class="block text-sm font-bold text-gray-900 mb-2">JUMLAH ANAK</label>
-                <input type="number" name="jumlah_anak" value="{{ old('jumlah_anak', 0) }}" min="0" 
+                <input type="number" name="jumlah_anak" value="{{ old('jumlah_anak', 0) }}" min="0"
                     class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
             </div>
 
@@ -238,8 +238,8 @@
             <!-- ALAMAT -->
             <div class="md:col-span-2">
                 <label class="block text-sm font-bold text-gray-900 mb-2">ALAMAT</label>
-                <input type="text" name="alamat" required value="{{ old('alamat') }}" 
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" 
+                <input type="text" name="alamat" required value="{{ old('alamat') }}"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
                     placeholder="ketik disini">
             </div>
 
@@ -258,8 +258,8 @@
             <!-- USIA (TAHUN) -->
             <div>
                 <label class="block text-sm font-bold text-gray-900 mb-2">USIA (TAHUN)</label>
-                <input type="number" name="usia" value="{{ old('usia', 0) }}" min="0" 
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 bg-gray-50" 
+                <input type="number" name="usia" value="{{ old('usia', 0) }}" min="0"
+                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 bg-gray-50"
                     readonly>
                 <p class="text-xs text-gray-500 mt-1">USIA 0 TAHUN</p>
             </div>

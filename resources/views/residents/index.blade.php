@@ -6,7 +6,7 @@
 <div class="space-y-6">
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
-        <h3 class="text-3xl font-bold text-white">TABLE WARGA</h3>
+        <h3 class="text-3xl font-bold text-white">REKAP DATA WARGA</h3>
     </div>
 
     <!-- Filter Section -->
