@@ -3,274 +3,268 @@
 @section('title', 'Input Warga')
 
 @section('content')
-<div class="bg-gradient-to-br from-blue-50 to-white rounded-2xl shadow-xl p-8">
-    <div class="mb-8 text-center">
-        <h3 class="text-3xl font-bold text-gray-900">ENTRY DATA WARGA DIBAWAH INI</h3>
+<div class="max-w-6xl mx-auto bg-blue-50 rounded-2xl shadow-xl p-10 ring-4 ring-sky-800">
+
+    <!-- Heading -->
+    <div class="text-center mb-10">
+        <h3 class="text-4xl font-extrabold text-slate-800 tracking-wide">
+            Form Input Data Warga
+        </h3>
     </div>
 
-    <form method="POST" action="{{ route('residents.store') }}" class="space-y-6">
+    <form method="POST" action="{{ route('residents.store') }}" class="space-y-8">
         @csrf
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- NO. KARTU KELUARGA -->
+        @php
+        $inputClass = "w-full px-4 py-3 rounded-xl border border-gray-200 bg-sky-100 ring-sky-800 ring-2
+        focus:bg-white focus:ring-2 focus:ring-sky-800 focus:outline-none transition focus:bg-sky-100";
+        $labelClass = "block text-md font-bold text-gray-800 mb-2 ";
+        @endphp
+
+        <div class="grid grid-cols-2 gap-6">
+
+            <!-- KK -->
             <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">NO. KARTU KELUARGA</label>
-                <input type="text" name="kk_id" required value="{{ old('kk_id') }}"
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                    placeholder="ketik disini">
+                <label class="{{ $labelClass }}">No. Kartu Keluarga</label>
+                <input type="text" name="kk_id" required class="{{ $inputClass }}" value="{{ old('kk_id') }}">
             </div>
 
-            <!-- NOMOR INDUK KEPENDUDUKAN -->
+            <!-- NIK -->
             <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">NOMOR INDUK KEPENDUDUKAN</label>
-                <input type="text" name="nik" required value="{{ old('nik') }}"
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                    placeholder="ketik disini">
+                <label class="{{ $labelClass }}">NIK</label>
+                <input type="text" name="nik" required class="{{ $inputClass }}" value="{{ old('nik') }}">
             </div>
 
-            <!-- NAMA -->
+            <!-- Nama -->
             <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">NAMA</label>
-                <input type="text" name="nama" required value="{{ old('nama') }}"
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                    placeholder="ketik disini">
+                <label class="{{ $labelClass }}">Nama Lengkap</label>
+                <input type="text" name="nama" required class="{{ $inputClass }}" value="{{ old('nama') }}">
             </div>
 
-            <!-- TEMPAT LAHIR -->
+            <!-- Tempat Lahir -->
             <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">TEMPAT LAHIR</label>
-                <input type="text" name="tempat_lahir" required value="{{ old('tempat_lahir') }}"
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                    placeholder="ketik disini">
+                <label class="{{ $labelClass }}">Tempat Lahir</label>
+                <input type="text" name="tempat_lahir" required class="{{ $inputClass }}" value="{{ old('tempat_lahir') }}">
             </div>
 
-            <!-- TANGGAL LAHIR -->
+            <!-- Tanggal Lahir -->
             <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">TANGGAL LAHIR</label>
-                <input type="date" name="tanggal_lahir" required value="{{ old('tanggal_lahir') }}"
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                <label class="{{ $labelClass }}">Tanggal Lahir</label>
+                <input type="date" name="tanggal_lahir" required class="{{ $inputClass }}" value="{{ old('tanggal_lahir') }}">
             </div>
 
-            <!-- JENIS KELAMIN -->
+            <!-- Jenis Kelamin -->
             <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">JENIS KELAMIN</label>
-                <div class="flex gap-4">
-                    <label class="flex items-center gap-2 cursor-pointer bg-blue-100 px-6 py-3 rounded-lg">
-                        <input type="radio" name="jenis_kelamin" value="Laki-laki" {{ old('jenis_kelamin') == 'Laki-laki' ? 'checked' : '' }} class="w-4 h-4">
-                        <span class="font-semibold">LAKI-LAKI ♂</span>
+                <label class="{{ $labelClass }}">Jenis Kelamin</label>
+                <div class="flex gap-3 w-full">
+                    <label class="bg-amber-100 rounded-xl border-2 border-amber-200 cursor-pointer w-1/2 transition font-bold
+                                has-[:checked]:bg-amber-200 has-[:checked]:text-black has-[:checked]:border-amber-300
+                                active:scale-95 p-3 flex justify-start has-[:checked]:after:content-['✓'] has-[:checked]:after:ms-2">
+                        <input type="radio" name="jenis_kelamin" value="Laki-laki" class="hidden" checked> Laki-laki
                     </label>
-                    <label class="flex items-center gap-2 cursor-pointer bg-pink-100 px-6 py-3 rounded-lg">
-                        <input type="radio" name="jenis_kelamin" value="Perempuan" {{ old('jenis_kelamin') == 'Perempuan' ? 'checked' : '' }} class="w-4 h-4">
-                        <span class="font-semibold">PEREMPUAN ♀</span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- GOLONGAN DARAH -->
-            <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">GOLONGAN DARAH</label>
-                <select name="golongan_darah" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                    <option value="">-- Pilih Golongan Darah --</option>
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
-                </select>
-            </div>
-
-            <!-- AGAMA -->
-            <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">AGAMA</label>
-                <select name="agama" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                    <option value="">-- Pilih Agama --</option>
-                    <option value="Islam">Islam</option>
-                    <option value="Kristen">Kristen</option>
-                    <option value="Katolik">Katolik</option>
-                    <option value="Hindu">Hindu</option>
-                    <option value="Buddha">Buddha</option>
-                    <option value="Konghucu">Konghucu</option>
-                </select>
-            </div>
-
-            <!-- PENDIDIKAN TERAKHIR -->
-            <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">PENDIDIKAN TERAKHIR</label>
-                <select name="pendidikan" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                    <option value="">-- Pilih Pendidikan Terakhir --</option>
-                    <option value="SD">SD</option>
-                    <option value="SMP">SMP</option>
-                    <option value="SMA/SMK">SMA/SMK</option>
-                    <option value="D1/D2/D3">D1/D2/D3</option>
-                    <option value="S1/D4">S1/D4</option>
-                    <option value="S2">S2</option>
-                    <option value="S3">S3</option>
-                </select>
-            </div>
-
-            <!-- PEKERJAAN -->
-            <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">PEKERJAAN</label>
-                <input type="text" name="pekerjaan" value="{{ old('pekerjaan') }}"
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                    placeholder="ketik disini">
-            </div>
-
-            <!-- STATUS MEROKOK -->
-            <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">STATUS MEROKOK</label>
-                <div class="flex gap-4">
-                    <label class="flex items-center gap-2 cursor-pointer bg-gray-100 px-6 py-3 rounded-lg">
-                        <input type="radio" name="status_merokok" value="MEROKOK" class="w-4 h-4">
-                        <span class="font-semibold">MEROKOK</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer bg-gray-100 px-6 py-3 rounded-lg">
-                        <input type="radio" name="status_merokok" value="TIDAK MEROKOK" checked class="w-4 h-4">
-                        <span class="font-semibold">TIDAK</span>
+                    <label class="bg-amber-100 rounded-xl border-2 border-amber-200 cursor-pointer w-1/2 transition font-bold
+                                has-[:checked]:bg-amber-200 has-[:checked]:text-black has-[:checked]:border-amber-300
+                                active:scale-95 p-3 flex justify-start has-[:checked]:after:content-['✓'] has-[:checked]:after:ms-2">
+                        <input type="radio" name="jenis_kelamin" value="Perempuan" class="hidden"> Perempuan
                     </label>
                 </div>
             </div>
 
-            <!-- NAMA AYAH -->
+            <!-- Golongan Darah -->
             <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">NAMA AYAH</label>
-                <input type="text" name="nama_ayah" value="{{ old('nama_ayah') }}"
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                    placeholder="ketik disini">
-            </div>
-
-            <!-- NAMA IBU -->
-            <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">NAMA IBU</label>
-                <input type="text" name="nama_ibu" value="{{ old('nama_ibu') }}"
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                    placeholder="ketik disini atau -- jika tidak ada">
-            </div>
-
-            <!-- RIWAYAT PENYAKIT -->
-            <div class="md:col-span-2">
-                <label class="block text-sm font-bold text-gray-900 mb-2">RIWAYAT PENYAKIT</label>
-                <textarea name="riwayat_penyakit" rows="3"
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                    placeholder="ketik disini atau -- jika tidak ada">{{ old('riwayat_penyakit') }}</textarea>
-            </div>
-
-            <!-- CEK KESEHATAN -->
-            <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">CEK KESEHATAN</label>
-                <select name="cek_kesehatan" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                    <option value="">-- Pilih Frekuensi Cek Kesehatan --</option>
-                    <option value="SETIAP BULAN">Setiap Bulan</option>
-                    <option value="3 BULAN SEKALI">3 Bulan Sekali</option>
-                    <option value="6 BULAN SEKALI">6 Bulan Sekali</option>
-                    <option value="SETAHUN SEKALI">Setahun Sekali</option>
-                    <option value="TIDAK PERNAH">Tidak Pernah</option>
+                <label class="{{ $labelClass }}">Golongan Darah</label>
+                <select name="golongan_darah" class="{{ $inputClass }}">
+                    <option value="">Pilih</option>
+                    <option>A+</option><option>A-</option>
+                    <option>B+</option><option>B-</option>
+                    <option>AB+</option><option>AB-</option>
+                    <option>O+</option><option>O-</option>
                 </select>
             </div>
 
-            <!-- ASURANSI KESEHATAN -->
+            <!-- Agama -->
             <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">ASURANSI KESEHATAN</label>
-                <select name="asuransi_kesehatan" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                    <option value="">-- Pilih Asuransi Kesehatan --</option>
-                    <option value="BPJS KESEHATAN">BPJS Kesehatan</option>
-                    <option value="BPJS PRIBADI">BPJS Pribadi</option>
-                    <option value="ASURANSI SWASTA">Asuransi Swasta</option>
-                    <option value="TIDAK MEMILIKI">Tidak Memiliki</option>
+                <label class="{{ $labelClass }}">Agama</label>
+                <select name="agama" required class="{{ $inputClass }}">
+                    <option value="">Pilih</option>
+                    <option>Islam</option><option>Kristen</option>
+                    <option>Katolik</option><option>Hindu</option>
+                    <option>Buddha</option><option>Konghucu</option>
                 </select>
             </div>
 
-            <!-- BPJS KETENAGAKERJAAN -->
+            <!-- Pendidikan -->
             <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">BPJS KETENAGAKERJAAN</label>
-                <div class="flex gap-4">
-                    <label class="flex items-center gap-2 cursor-pointer bg-gray-100 px-6 py-3 rounded-lg">
-                        <input type="radio" name="bpjs_ketenagakerjaan" value="MEMILIKI" class="w-4 h-4">
-                        <span class="font-semibold">MEMILIKI</span>
+                <label class="{{ $labelClass }}">Pendidikan</label>
+                <select name="pendidikan" class="{{ $inputClass }}">
+                    <option value="">Pilih</option>
+                    <option>SD</option><option>SMP</option>
+                    <option>SMA/SMK</option><option>D1/D2/D3</option>
+                    <option>S1/D4</option><option>S2</option><option>S3</option>
+                </select>
+            </div>
+
+            <!-- Status Kawin -->
+            <div>
+                <label class="{{ $labelClass }}">Status Perkawinan</label>
+                <select name="status_perkawinan" required class="{{ $inputClass }}">
+                    <option value="">Pilih</option>
+                    <option>Belum Menikah</option>
+                    <option>Menikah</option>
+                    <option>Janda</option>
+                    <option>Duda</option>
+                </select>
+            </div>
+
+            <!-- Pekerjaan -->
+            <div>
+                <label class="{{ $labelClass }}">Pekerjaan</label>
+                <input type="text" name="pekerjaan" class="{{ $inputClass }}" value="{{ old('pekerjaan') }}">
+            </div>
+
+            <!-- Telepon -->
+            <div>
+                <label class="{{ $labelClass }}">Nomor Telepon</label>
+                <input type="text" name="no_telepon" class="{{ $inputClass }}" value="{{ old('no_telepon') }}">
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label class="{{ $labelClass }}">Email</label>
+                <input type="email" name="email" class="{{ $inputClass }}" value="{{ old('email') }}">
+            </div>
+
+            <!-- Status Merokok -->
+            <div>
+                <label class="{{ $labelClass }}">Status Merokok</label>
+                <div class="flex gap-4 w-full">
+                    <label class="bg-cyan-200 rounded-xl border-2 border-cyan-300 cursor-pointer w-1/2 transition font-bold
+                                has-[:checked]:bg-cyan-400 has-[:checked]:text-black has-[:checked]:border-cyan-500
+                                active:scale-95 p-3 flex justify-start has-[:checked]:after:content-['✓'] has-[:checked]:after:ms-2">
+                        <input type="radio" name="status_merokok" value="MEROKOK" class="hidden"> Merokok
                     </label>
-                    <label class="flex items-center gap-2 cursor-pointer bg-gray-100 px-6 py-3 rounded-lg">
-                        <input type="radio" name="bpjs_ketenagakerjaan" value="TIDAK MEMILIKI" class="w-4 h-4">
-                        <span class="font-semibold">TIDAK</span>
+                    <label class="bg-cyan-200 rounded-xl border-2 border-cyan-300 cursor-pointer w-1/2 transition font-bold
+                                has-[:checked]:bg-cyan-400 has-[:checked]:text-black has-[:checked]:border-cyan-500
+                                active:scale-95 p-3 flex justify-start has-[:checked]:after:content-['✓'] has-[:checked]:after:ms-2">
+                        <input type="radio" name="status_merokok" value="MEROKOK" class="hidden" checked> Tidak Merokok
                     </label>
                 </div>
             </div>
 
-            <!-- KEINGINAN MENAMBAH ANAK -->
+            <!-- Nama Ayah -->
             <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">KEINGINAN MENAMBAH ANAK</label>
-                <div class="flex gap-4">
-                    <label class="flex items-center gap-2 cursor-pointer bg-gray-100 px-6 py-3 rounded-lg">
-                        <input type="radio" name="tambah_anak" value="YA" class="w-4 h-4">
-                        <span class="font-semibold">YA</span>
+                <label class="{{ $labelClass }}">Nama Ayah</label>
+                <input type="text" name="nama_ayah" class="{{ $inputClass }}" value="{{ old('nama_ayah') }}">
+            </div>
+
+            <!-- Nama Ibu -->
+            <div>
+                <label class="{{ $labelClass }}">Nama Ibu</label>
+                <input type="text" name="nama_ibu" class="{{ $inputClass }}" value="{{ old('nama_ibu') }}">
+            </div>
+
+            <!-- Riwayat Penyakit -->
+            <div class="">
+                <label class="{{ $labelClass }}">Riwayat Penyakit</label>
+                <input type="text" name="riwayat_penyakit" class="{{ $inputClass }}">{{ old('riwayat_penyakit') }}</input>
+            </div>
+
+            <!-- Cek Kesehatan -->
+            <div>
+                <label class="{{ $labelClass }}">Cek Kesehatan</label>
+                <select name="cek_kesehatan" class="{{ $inputClass }}">
+                    <option value="">Pilih</option>
+                    <option>SETIAP BULAN</option>
+                    <option>3 BULAN SEKALI</option>
+                    <option>6 BULAN SEKALI</option>
+                    <option>SETAHUN SEKALI</option>
+                    <option>TIDAK PERNAH</option>
+                </select>
+            </div>
+
+            <!-- Asuransi -->
+            <div>
+                <label class="{{ $labelClass }}">Asuransi Kesehatan</label>
+                <select name="asuransi_kesehatan" class="{{ $inputClass }}">
+                    <option value="">Pilih</option>
+                    <option>BPJS KESEHATAN</option>
+                    <option>BPJS PRIBADI</option>
+                    <option>ASURANSI SWASTA</option>
+                    <option>TIDAK MEMILIKI</option>
+                </select>
+            </div>
+
+            <!-- BPJS TK -->
+            <div>
+                <label class="{{ $labelClass }}">BPJS Ketenagakerjaan</label>
+                <div class="flex gap-3 w-full">
+                    <label class="bg-emerald-100 rounded-xl border-2 border-emerald-200 cursor-pointer w-1/2 transition font-bold
+                                has-[:checked]:bg-emerald-400 has-[:checked]:text-black has-[:checked]:border-emerald-600
+                                active:scale-95 p-3 flex justify-start has-[:checked]:after:content-['✓'] has-[:checked]:after:ms-2">
+                        <input type="radio" name="bpjs_ketenagakerjaan" value="YA" class="hidden"> Ya
                     </label>
-                    <label class="flex items-center gap-2 cursor-pointer bg-gray-100 px-6 py-3 rounded-lg">
-                        <input type="radio" name="tambah_anak" value="TIDAK" class="w-4 h-4">
-                        <span class="font-semibold">TIDAK</span>
+                    <label class="bg-emerald-100 rounded-xl border-2 border-emerald-200 cursor-pointer w-1/2 transition font-bold
+                                has-[:checked]:bg-emerald-400 has-[:checked]:text-black has-[:checked]:border-emerald-600
+                                active:scale-95 p-3 flex justify-start has-[:checked]:after:content-['✓'] has-[:checked]:after:ms-2">
+                        <input type="radio" name="bpjs_ketenagakerjaan" value="TIDAK" class="hidden" checked> Tidak
                     </label>
                 </div>
             </div>
 
-            <!-- JUMLAH ANAK -->
+            <!-- Tambah Anak -->
             <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">JUMLAH ANAK</label>
-                <input type="number" name="jumlah_anak" value="{{ old('jumlah_anak', 0) }}" min="0"
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
+                <label class="{{ $labelClass }}">Ingin Tambah Anak</label>
+                <div class="flex gap-3 w-full">
+                    <label class="bg-rose-100 rounded-xl border-2 border-rose-200 cursor-pointer w-1/2 transition font-bold
+                                has-[:checked]:bg-rose-300 has-[:checked]:text-black has-[:checked]:border-rose-400
+                                active:scale-95 p-3 flex justify-start has-[:checked]:after:content-['✓'] has-[:checked]:after:ms-2">
+                        <input type="radio" name="tambah_anak" value="MEMILIKI" class="hidden"> Memiliki
+                    </label>
+                    <label class="bg-rose-100 rounded-xl border-2 border-rose-200 cursor-pointer w-1/2 transition font-bold
+                                has-[:checked]:bg-rose-300 has-[:checked]:text-black has-[:checked]:border-rose-400
+                                active:scale-95 p-3 flex justify-start has-[:checked]:after:content-['✓'] has-[:checked]:after:ms-2">
+                        <input type="radio" name="tambah_anak" value="TIDAK MEMILIKI" class="hidden" checked> Tidak
+                    </label>
+                </div>
             </div>
 
-            <!-- ALAT KONTRASEPSI -->
+            <!-- Jumlah Anak -->
             <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">ALAT KONTRASEPSI</label>
-                <select name="alat_kontrasepsi" class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                    <option value="">-- Pilih alat kontrasepsi --</option>
-                    <option value="KONDOM">Kondom</option>
-                    <option value="IUD/SPIRAL">IUD/Spiral</option>
-                    <option value="PIL">Pil</option>
-                    <option value="SUNTIK">Suntik</option>
-                    <option value="IMPLANT">Implant</option>
-                    <option value="STERIL">Steril</option>
-                    <option value="TIDAK ADA">Tidak Ada</option>
+                <label class="{{ $labelClass }}">Jumlah Anak</label>
+                <input type="number" name="jumlah_anak" class="{{ $inputClass }}" min="0" value="{{ old('jumlah_anak',0) }}">
+            </div>
+
+            <!-- Alat Kontrasepsi -->
+            <div>
+                <label class="{{ $labelClass }}">Alat Kontrasepsi</label>
+                <select name="alat_kontrasepsi" class="{{ $inputClass }}">
+                    <option value="">Pilih</option>
+                    <option>KONDOM</option>
+                    <option>IUD/SPIRAL</option>
+                    <option>PIL</option>
+                    <option>SUNTIK</option>
+                    <option>IMPLANT</option>
+                    <option>STERIL</option>
+                    <option>TIDAK ADA</option>
                 </select>
             </div>
 
-            <!-- ALAMAT -->
-            <div class="md:col-span-2">
-                <label class="block text-sm font-bold text-gray-900 mb-2">ALAMAT</label>
-                <input type="text" name="alamat" required value="{{ old('alamat') }}"
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                    placeholder="ketik disini">
+            <!-- Alamat -->
+            <div class="">
+                <label class="{{ $labelClass }}">Alamat Lengkap</label>
+                <textarea name="alamat" rows="1" class="{{ $inputClass }}">{{ old('alamat') }}</textarea>
             </div>
 
-            <!-- STATUS KAWIN -->
-            <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">STATUS KAWIN</label>
-                <select name="status_perkawinan" required class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500">
-                    <option value="">-- Pilih Status Kawin --</option>
-                    <option value="Belum Menikah">Belum Menikah</option>
-                    <option value="Menikah">Menikah</option>
-                    <option value="Janda">Janda</option>
-                    <option value="Duda">Duda</option>
-                </select>
-            </div>
-
-            <!-- USIA (TAHUN) -->
-            <div>
-                <label class="block text-sm font-bold text-gray-900 mb-2">USIA (TAHUN)</label>
-                <input type="number" name="usia" value="{{ old('usia', 0) }}" min="0"
-                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 bg-gray-50"
-                    readonly>
-                <p class="text-xs text-gray-500 mt-1">USIA 0 TAHUN</p>
-            </div>
         </div>
 
-        <!-- Submit Button -->
-        <div class="flex justify-center pt-6">
-            <button type="submit" class="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-bold px-12 py-4 rounded-xl transition transform hover:scale-105 shadow-lg">
-                SIMPAN
+        <!-- Submit -->
+        <div class="flex justify-center pt-2 w-full">
+            <button type="submit" class=" w-3/4 p-4 bg-gradient-to-r from-sky-600 to-sky-800 text-white font-bold rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition">
+                Simpan Data
             </button>
         </div>
+
     </form>
+
 </div>
 @endsection
