@@ -60,4 +60,33 @@ class KKController extends Controller
         $kk->delete();
         return redirect()->route('kks.index')->with('success', 'Kartu Keluarga berhasil dihapus');
     }
+
+    /**
+     * API: Cek apakah No. KK sudah ada dan ambil datanya
+     */
+    public function checkKK($no_kk)
+    {
+        $kk = KK::where('no_kk', $no_kk)->first();
+
+        if ($kk) {
+            return response()->json([
+                'exists' => true,
+                'kk' => [
+                    'id' => $kk->id,
+                    'no_kk' => $kk->no_kk,
+                    'alamat' => $kk->alamat,
+                    'rt' => $kk->rt,
+                    'rw' => $kk->rw,
+                    'kelurahan' => $kk->kelurahan,
+                    'kecamatan' => $kk->kecamatan,
+                    'jumlah_anggota' => $kk->residents()->count(),
+                ]
+            ]);
+        }
+
+        return response()->json([
+            'exists' => false,
+            'message' => 'No. KK belum terdaftar'
+        ]);
+    }
 }
