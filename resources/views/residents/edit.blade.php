@@ -4,13 +4,13 @@
 
 @section('content')
 <div class="max-w-4xl">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+    <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-10">
         <div class="mb-8">
             <h3 class="text-2xl font-bold text-gray-900 mb-2">Edit Data Penduduk</h3>
             <p class="text-gray-600">Perbarui informasi penduduk dengan data yang akurat.</p>
         </div>
 
-        <form method="POST" action="{{ route('residents.update', $resident) }}" class="space-y-8">
+        <form method="POST" action="{{ route('residents.update', $resident) }}" class="space-y-8 m-6">
             @csrf
             @method('PUT')
 
@@ -19,15 +19,11 @@
                     <i class="fas fa-id-card text-blue-600 mr-2"></i>Identitas Dasar
                 </h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Kartu Keluarga <span class="text-red-600">*</span></label>
-                        <select name="kk_id" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition">
-                            <option value="">Pilih Kartu Keluarga</option>
-                            @foreach ($kks as $kk)
-                                <option value="{{ $kk->id }}" {{ old('kk_id', $resident->kk_id) == $kk->id ? 'selected' : '' }}>{{ $kk->no_kk }} - {{ $kk->alamat }}</option>
-                            @endforeach
-                        </select>
-                        @error('kk_id') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
+                    <div class="">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">No. Kartu Keluarga <span class="text-red-600">*</span></label>
+                        <input type="text" name="no_kk" required value="{{ old('no_kk', $resident->kk->no_kk ?? '') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition" placeholder="16 digit No. KK">
+                        <p class="text-xs text-gray-600 mt-1">Jika No. KK berubah dan belum ada, sistem akan otomatis membuat KK baru.</p>
+                        @error('no_kk') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
@@ -36,16 +32,36 @@
                         @error('nik') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    <div class="md:col-span-2">
+                    <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Lengkap <span class="text-red-600">*</span></label>
                         <input type="text" name="nama" required value="{{ old('nama', $resident->nama) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition" placeholder="Nama lengkap sesuai KTP">
                         @error('nama') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
                     </div>
 
-                    <div class="md:col-span-2">
+                    <div class="">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Alamat <span class="text-red-600">*</span></label>
-                        <input type="text" name="alamat" required value="{{ old('alamat', $resident->alamat) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition" placeholder="Alamat lengkap">
+                        <input type="text" name="alamat" required value="{{ old('alamat', $resident->alamat ?? $resident->kk->alamat ?? '') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition" placeholder="Alamat lengkap">
                         @error('alamat') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">RT</label>
+                        <input type="text" name="rt" value="{{ old('rt', $resident->kk->rt ?? '') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition" placeholder="001" maxlength="3">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">RW</label>
+                        <input type="text" name="rw" value="{{ old('rw', $resident->kk->rw ?? '') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition" placeholder="001" maxlength="3">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Kelurahan/Desa</label>
+                        <input type="text" name="kelurahan" value="{{ old('kelurahan', $resident->kk->kelurahan ?? '') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition" placeholder="Nama Kelurahan">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Kecamatan</label>
+                        <input type="text" name="kecamatan" value="{{ old('kecamatan', $resident->kk->kecamatan ?? '') }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition" placeholder="Nama Kecamatan">
                     </div>
                 </div>
             </div>
@@ -183,9 +199,9 @@
                             <option value="TIDAK MEMILIKI" {{ old('asuransi_kesehatan', $resident->asuransi_kesehatan) == 'TIDAK MEMILIKI' ? 'selected' : '' }}>Tidak Memiliki</option>
                         </select>
                     </div>
-                    <div class="md:col-span-2">
+                    <div class="">
                         <label class="block text-sm font-semibold text-gray-700 mb-2">Riwayat Penyakit</label>
-                        <textarea name="riwayat_penyakit" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 transition" rows="3" placeholder="Jika ada, sebutkan riwayat penyakit...">{{ old('riwayat_penyakit', $resident->riwayat_penyakit) }}</textarea>
+                        <input name="riwayat_penyakit" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 transition" placeholder="Jika ada, sebutkan riwayat penyakit...">{{ old('riwayat_penyakit', $resident->riwayat_penyakit) }}</input>
                     </div>
                 </div>
             </div>
@@ -244,7 +260,7 @@
                     <i class="fas fa-save"></i>
                     Perbarui Data
                 </button>
-                <a href="{{ route('residents.index') }}" class="inline-flex items-center gap-2 bg-gray-300 hover:bg-gray-400 text-gray-900 px-6 py-3 rounded-lg transition font-semibold">
+                <a href="{{ route('residents.index') }}" class="inline-flex items-center gap-2 bg-red-500 hover:bg-red-600 text-gray-50 px-6 py-3 rounded-lg transition font-semibold">
                     <i class="fas fa-times"></i>
                     Batal
                 </a>
@@ -252,4 +268,154 @@
         </form>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const noKKInput = document.querySelector('input[name="no_kk"]');
+    const alamatInput = document.querySelector('input[name="alamat"]');
+    const rtInput = document.querySelector('input[name="rt"]');
+    const rwInput = document.querySelector('input[name="rw"]');
+    const kelurahanInput = document.querySelector('input[name="kelurahan"]');
+    const kecamatanInput = document.querySelector('input[name="kecamatan"]');
+
+    const originalNoKK = noKKInput.value; // Simpan No. KK asli
+    let debounceTimer;
+
+    noKKInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+
+        const noKK = this.value.trim();
+
+        // Jika kembali ke No. KK asli, enable semua field
+        if (noKK === originalNoKK) {
+            enableFields();
+            return;
+        }
+
+        // Reset fields jika No. KK kosong
+        if (noKK.length === 0) {
+            enableFields();
+            return;
+        }
+
+        // Tunggu 500ms sebelum melakukan request
+        debounceTimer = setTimeout(() => {
+            if (noKK.length >= 10) { // Minimal 10 digit untuk mulai cek
+                fetchKKData(noKK);
+            }
+        }, 500);
+    });
+
+    function fetchKKData(noKK) {
+        // Tampilkan loading indicator
+        showLoading();
+
+        fetch(`/api/kk/check/${encodeURIComponent(noKK)}`)
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+
+                if (data.exists) {
+                    // KK sudah ada, isi field dengan data KK
+                    alamatInput.value = data.kk.alamat || '';
+                    rtInput.value = data.kk.rt || '';
+                    rwInput.value = data.kk.rw || '';
+                    kelurahanInput.value = data.kk.kelurahan || '';
+                    kecamatanInput.value = data.kk.kecamatan || '';
+
+                    // Disable fields agar tidak bisa diubah
+                    disableFields();
+
+                    // Tampilkan notifikasi
+                    showNotification('success', `KK ditemukan! Warga akan dipindahkan ke KK ${noKK} (${data.kk.jumlah_anggota} anggota)`);
+                } else {
+                    // KK belum ada, enable fields untuk input manual
+                    enableFields();
+                    showNotification('info', 'No. KK belum terdaftar. Silakan isi data KK baru.');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                console.error('Error:', error);
+                enableFields();
+                showNotification('error', 'Terjadi kesalahan saat mengecek No. KK');
+            });
+    }
+
+    function disableFields() {
+        alamatInput.readOnly = true;
+        rtInput.readOnly = true;
+        rwInput.readOnly = true;
+        kelurahanInput.readOnly = true;
+        kecamatanInput.readOnly = true;
+
+        [alamatInput, rtInput, rwInput, kelurahanInput, kecamatanInput].forEach(input => {
+            input.classList.add('bg-gray-100', 'cursor-not-allowed');
+        });
+    }
+
+    function enableFields() {
+        alamatInput.readOnly = false;
+        rtInput.readOnly = false;
+        rwInput.readOnly = false;
+        kelurahanInput.readOnly = false;
+        kecamatanInput.readOnly = false;
+
+        [alamatInput, rtInput, rwInput, kelurahanInput, kecamatanInput].forEach(input => {
+            input.classList.remove('bg-gray-100', 'cursor-not-allowed');
+        });
+
+        // Hapus notifikasi jika ada
+        const existingNotif = document.querySelector('.kk-notification');
+        if (existingNotif) {
+            existingNotif.remove();
+        }
+    }
+
+    function showLoading() {
+        noKKInput.classList.add('animate-pulse');
+    }
+
+    function hideLoading() {
+        noKKInput.classList.remove('animate-pulse');
+    }
+
+    function showNotification(type, message) {
+        // Hapus notifikasi sebelumnya jika ada
+        const existingNotif = document.querySelector('.kk-notification');
+        if (existingNotif) {
+            existingNotif.remove();
+        }
+
+        const colors = {
+            success: 'bg-green-50 border-green-200 text-green-800',
+            info: 'bg-blue-50 border-blue-200 text-blue-800',
+            error: 'bg-red-50 border-red-200 text-red-800'
+        };
+
+        const icons = {
+            success: '✓',
+            info: 'ℹ',
+            error: '⚠'
+        };
+
+        const notif = document.createElement('div');
+        notif.className = `kk-notification ${colors[type]} border-2 rounded-lg p-3 mt-2 flex items-center gap-2 text-sm font-semibold`;
+        notif.innerHTML = `
+            <span class="text-lg">${icons[type]}</span>
+            <span>${message}</span>
+        `;
+
+        // Insert setelah input No. KK
+        noKKInput.parentElement.appendChild(notif);
+
+        // Auto remove setelah 5 detik
+        setTimeout(() => {
+            notif.remove();
+        }, 5000);
+    }
+});
+</script>
+@endpush
 @endsection
