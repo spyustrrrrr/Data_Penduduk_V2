@@ -51,8 +51,7 @@ class ChartController extends Controller
         $umurData = DB::table('residents')
             ->select(DB::raw("
                 CASE
-                    WHEN (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) < 1 THEN 'Bayi (0-1 Tahun)'
-                    WHEN (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) >= 1 AND (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) < 6 THEN 'Balita (1-5 Tahun)'
+                    WHEN (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) >= 0 AND (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) < 6 THEN 'Balita (0-5 Tahun)'
                     WHEN (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) >= 6 AND (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) < 11 THEN 'Anak-anak (6-10 Tahun)'
                     WHEN (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) >= 11 AND (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) < 19 THEN 'Remaja (11-18 Tahun)'
                     WHEN (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) >= 19 AND (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) < 60 THEN 'Dewasa (19-59 Tahun)'
