@@ -65,10 +65,6 @@
                     <i class="fas fa-user-plus w-5"></i>
                     <span>Entry Data </span>
                 </a>
-                <a href="{{ route('residents.index') }}" class="nav-item {{ request()->routeIs('residents.show') ? 'active' : '' }} flex items-center gap-3 px-4 py-3 rounded-lg">
-                    <i class="fas fa-id-card w-5"></i>
-                    <span>Biodata Warga</span>
-                </a>
                 <a href="{{ route('charts.index') }}" class="nav-item {{ request()->routeIs('charts.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-3 rounded-lg">
                     <i class="fas fa-chart-bar w-5"></i>
                     <span>Grafik</span>

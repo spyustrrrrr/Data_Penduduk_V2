@@ -11,7 +11,7 @@
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <!-- Card 1: Jumlah Warga -->
         <div class="bg-gradient-to-br from-sky-700 to-sky-800 rounded-2xl shadow-lg p-8 text-white">
             <div class="flex flex-col items-center text-center">
@@ -31,8 +31,14 @@
         <!-- Card 3: Jumlah Laki-Laki & Perempuan -->
         <div class="bg-gradient-to-br from-sky-700 to-sky-800 rounded-2xl shadow-lg p-8 text-white">
             <div class="flex flex-col items-center text-center">
-                <h3 class="text-xl font-semibold mb-2">Jumlah Laki-Laki & Perempuan</h3>
-                <div class="text-6xl font-bold my-4">{{ $totalLaki + $totalPerempuan }}</div>
+                <h3 class="text-xl font-semibold mb-2">Jumlah Laki-Laki</h3>
+                <div class="text-6xl font-bold my-4">{{ $totalLaki}}</div>
+            </div>
+        </div>
+        <div class="bg-gradient-to-br from-sky-700 to-sky-800 rounded-2xl shadow-lg p-8 text-white">
+            <div class="flex flex-col items-center text-center">
+                <h3 class="text-xl font-semibold mb-2">Jumlah Perempuan</h3>
+                <div class="text-6xl font-bold my-4">{{$totalPerempuan }}</div>
             </div>
         </div>
     </div>
