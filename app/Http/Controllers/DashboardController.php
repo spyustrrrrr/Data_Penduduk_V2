@@ -22,18 +22,30 @@ class DashboardController extends Controller
         $totalPerempuan = Resident::where('jenis_kelamin', 'Perempuan')->count();
 
         // Ambil 5 log aktivitas terbaru
+        // $pengumuman = ActivityLog::with('user')
+        //     ->latest('created_at')
+        //     ->take(5)
+        //     ->get()
+        //     ->map(function ($log) {
+        //         return [
+        //             'description' => $log->description,
+        //             'user' => $log->user ? $log->user->name : 'System',
+        //             'time' => $log->created_at->diffForHumans(),
+        //             'action' => $log->action,
+        //         ];
+        //     });
+
         $pengumuman = ActivityLog::with('user')
             ->latest('created_at')
-            ->take(5)
             ->get()
             ->map(function ($log) {
-                return [
-                    'description' => $log->description,
-                    'user' => $log->user ? $log->user->name : 'System',
-                    'time' => $log->created_at->diffForHumans(),
-                    'action' => $log->action,
-                ];
-            });
+        return [
+            'description' => $log->description,
+            'user' => $log->user ? $log->user->name : 'System',
+            'time' => $log->created_at->diffForHumans(),
+            'action' => $log->action,
+        ];
+    });
 
         return view('dashboard', [
             'totalWarga' => $totalWarga,

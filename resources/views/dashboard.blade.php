@@ -46,7 +46,7 @@
             <h3 class="text-2xl font-bold text-white">Riwayat Pembaruan</h3>
         </div>
 
-        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 space-y-3">
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 space-y-3 max-h-[350px] overflow-y-auto">
             @forelse($pengumuman as $item)
                 <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/30 hover:bg-white/30 transition">
                     <div class="flex items-start gap-3">
