@@ -68,6 +68,8 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Pendidikan Terakhir</label>
                     <select name="pendidikan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent transition">
                         <option value="">Semua</option>
+                        <option value="Belum Sekolah" {{ request('pendidikan') == 'Belum Sekolah' ? 'selected' : '' }}>Belum Sekolah</option>
+                        <option value="TK" {{ request('pendidikan') == 'TK' ? 'selected' : '' }}>TK</option>
                         <option value="SD" {{ request('pendidikan') == 'SD' ? 'selected' : '' }}>SD</option>
                         <option value="SMP" {{ request('pendidikan') == 'SMP' ? 'selected' : '' }}>SMP</option>
                         <option value="SMA/SMK" {{ request('pendidikan') == 'SMA/SMK' ? 'selected' : '' }}>SMA/SMK</option>
