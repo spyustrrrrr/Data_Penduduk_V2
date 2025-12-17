@@ -8,6 +8,7 @@ use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class ResidentController extends Controller
 {
@@ -146,6 +147,7 @@ class ResidentController extends Controller
             'no_kk' => 'required|string',
             'nik' => 'required|string|unique:residents',
             'nama' => 'required|string',
+            'foto_ktp' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tanggal_lahir' => 'required|date',
             'tempat_lahir' => 'required|string',
@@ -205,6 +207,12 @@ class ResidentController extends Controller
             // Hapus field yang tidak ada di table residents
             unset($validated['no_kk'], $validated['rt'], $validated['rw'], $validated['kelurahan'], $validated['kecamatan']);
 
+            if ($request->hasFile('foto_ktp')) {
+            // Simpan ke folder 'storage/app/public/ktp_photos'
+            $path = $request->file('foto_ktp')->store('ktp_photos', 'public');
+            $validated['foto_ktp'] = $path;
+        }
+
             // Set kk_id
             $validated['kk_id'] = $kk->id;
 
@@ -245,6 +253,7 @@ class ResidentController extends Controller
             'no_kk' => 'required|string',
             'nik' => 'required|string|unique:residents,nik,' . $resident->id,
             'nama' => 'required|string',
+            'foto_ktp' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'tanggal_lahir' => 'required|date',
             'tempat_lahir' => 'required|string',
@@ -313,6 +322,18 @@ class ResidentController extends Controller
 
             // Hapus field yang tidak ada di table residents
             unset($validated['no_kk'], $validated['rt'], $validated['rw'], $validated['kelurahan'], $validated['kecamatan']);
+
+
+            if ($request->hasFile('foto_ktp')) {
+                // 1. Hapus foto lama jika ada
+                if ($resident->foto_ktp && Storage::disk('public')->exists($resident->foto_ktp)) {
+                    Storage::disk('public')->delete($resident->foto_ktp);
+                }
+
+                // 2. Simpan foto baru
+                $path = $request->file('foto_ktp')->store('ktp_photos', 'public');
+                $validated['foto_ktp'] = $path;
+            }
 
             // Set kk_id
             $validated['kk_id'] = $kk->id;

@@ -10,7 +10,7 @@
             <p class="text-gray-600">Perbarui informasi penduduk dengan data yang akurat.</p>
         </div>
 
-        <form method="POST" action="{{ route('residents.update', $resident) }}" class="space-y-8 m-6">
+        <form method="POST" action="{{ route('residents.update', $resident) }}" class="space-y-8 m-6" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -252,6 +252,29 @@
                             <option value="TIDAK ADA" {{ old('alat_kontrasepsi', $resident->alat_kontrasepsi) == 'TIDAK ADA' ? 'selected' : '' }}>Tidak Ada</option>
                         </select>
                     </div>
+                </div>
+            </div>
+
+            {{-- 2. Tambahkan Input Foto KTP di sini (misalnya setelah input Nama atau di akhir bagian identitas) --}}
+        <div class="mt-6 border-t border-gray-100 pt-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Foto KTP (Opsional)</label>
+            
+            <div class="flex items-start gap-6">
+                {{-- Preview Foto Lama --}}
+                @if($resident->foto_ktp)
+                    <div class="w-32 flex-shrink-0">
+                        <p class="text-xs text-gray-500 mb-1">Foto Saat Ini:</p>
+                        <img src="{{ asset('storage/' . $resident->foto_ktp) }}" class="w-full rounded-lg shadow-sm border border-gray-200">
+                    </div>
+                @endif
+
+                {{-- Input Upload Baru --}}
+                <div class="flex-grow">
+                    <input type="file" name="foto_ktp" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition bg-gray-50 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    <p class="text-xs text-gray-500 mt-1">
+                        Upload file baru untuk mengganti foto lama. Format: JPG, JPEG, PNG. Maks: 2MB.
+                    </p>
+                    @error('foto_ktp') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
                 </div>
             </div>
 

@@ -13,7 +13,7 @@
         </h3>
     </div>
 
-    <form method="POST" action="{{ route('residents.store') }}" class="space-y-8">
+    <form <form method="POST" action="{{ route('residents.store') }}" class="space-y-8" enctype="multipart/form-data">
         @csrf
 
         @php
@@ -311,6 +311,21 @@
                     </div>
                 </div>
 
+     <!-- Foto KTP -->
+    {{-- 2. Tambahkan Input Foto KTP di sini (misalnya setelah input Nama atau di akhir bagian identitas) --}}
+        <div class="mt-6 border-t border-gray-100 pt-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Foto KTP (Opsional)</label>
+                {{-- Input Upload Baru --}}
+                <div class="flex-grow">
+                    <input type="file" name="foto_ktp" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition bg-gray-50 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    <p class="text-xs text-gray-500 mt-1">
+                        Upload file baru untuk mengganti foto lama. Format: JPG, JPEG, PNG. Maks: 2MB.
+                    </p>
+                    @error('foto_ktp') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
+                </div>
+            </div>
+        </div>
+
 
         <!-- Submit -->
         <div class="flex justify-center pt-2 w-full">
@@ -319,6 +334,7 @@
             </button>
         </div>
 
+       
     </form>
 
 </div>

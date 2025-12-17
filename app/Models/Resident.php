@@ -19,6 +19,7 @@ class Resident extends Model
         'kk_id',
         'nik',
         'nama',
+        'foto_ktp',
         'jenis_kelamin',
         'tanggal_lahir',
         'tempat_lahir',

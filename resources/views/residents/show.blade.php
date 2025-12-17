@@ -149,6 +149,28 @@
             </div>
         </div>
 
+        <!-- Foto KTP -->
+        <div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-4 pb-3 border-b-2 border-slate-600">
+                <i class="fas fa-image text-slate-600 mr-2"></i>Dokumen KTP
+            </h4>
+            
+            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 flex justify-center">
+                @if($resident->foto_ktp)
+                    <div class="text-center">
+                        <img src="{{ asset('storage/' . $resident->foto_ktp) }}" 
+                             alt="Foto KTP {{ $resident->nama }}" 
+                             class="max-w-full h-auto max-h-[400px] rounded-lg shadow-md hover:scale-105 transition duration-300">
+                        <p class="mt-2 text-sm text-gray-500">Klik kanan pada gambar untuk melihat ukuran penuh</p>
+                    </div>
+                @else
+                    <div class="text-center py-8 text-gray-400">
+                        <i class="fas fa-image-slash text-4xl mb-2"></i>
+                        <p>Tidak ada foto KTP yang diunggah.</p>
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
 </div>
 @endsection
