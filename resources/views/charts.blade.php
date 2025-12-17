@@ -11,25 +11,41 @@
 
     <!-- Category Buttons -->
     <div class="flex gap-4">
+        <button onclick="showChart('kelamin')" id="btn-kelamin" class="bg-white hover:bg-sky-700 text-gray-700 font-bold px-6 py-3 rounded-xl transition">
+            Jenis Kelamin
+        </button>
         <button onclick="showChart('umur')" id="btn-umur" class="bg-white hover:bg-sky-700 text-gray-700 font-bold px-6 py-3 rounded-xl transition">
-            Umur
+            Usia
         </button>
         <button onclick="showChart('pendidikan')" id="btn-pendidikan" class="bg-white hover:bg-sky-700 text-gray-700 font-bold px-6 py-3 rounded-xl transition">
             Pendidikan
         </button>
-        <button onclick="showChart('pekerjaan')" id="btn-pekerjaan" class="bg-white hover:bg-sky-700 text-gray-700 font-bold px-6 py-3 rounded-xl transition">
-            Pekerjaan
-        </button>
         <button onclick="showChart('status')" id="btn-status" class="bg-white hover:bg-sky-700 text-gray-700 font-bold px-6 py-3 rounded-xl transition">
-            Status
+            Status Pernikahan
         </button>
     </div>
 
     <!-- Chart Container -->
     <div class="bg-white rounded-2xl shadow-2xl p-8">
+        <!-- Template Chart + Description -->
+        <div id="chart-kelamin" class="chart-section">
+            <div class="flex flex-row gap-6">
+                <div class="w-1/3 flex flex-col justify-start">
+                    @php $kelaminData = json_decode($kelaminChart, true); @endphp
+                    <h3 class="text-2xl font-bold mb-4">Data Jenis Kelamin warga</h3>
+                    <p class="text-gray-700 leading-relaxed mb-4">Grafik ini menggambarkan sebaran warga berdasarkan jenis kelamin dengan detail sebagai berikut: .</p>
+                    <ul class="text-gray-800 space-y-1 text-md">
+                        @foreach($kelaminData['labels'] as $i => $label)
+                            <li><strong>{{ $label }}</strong>: {{ $kelaminData['values'][$i] }} orang</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div class="w-2/3 min-h-[350px]"><div id="kelaminChart"></div></div>
+            </div>
+        </div>
 
     <!-- Template Chart + Description -->
-        <div id="chart-umur" class="chart-section">
+        <div id="chart-umur" class="chart-section hidden">
             <div class="flex flex-row gap-6">
                 <div class="w-1/3 flex flex-col justify-start">
                     @php $umurData = json_decode($umurChart, true); @endphp
@@ -37,15 +53,13 @@
                     <p class="text-gray-700 leading-relaxed mb-4">Grafik ini menggambarkan sebaran warga berdasarkan kelompok usia dengan detail sebagai berikut: .</p>
                     <ul class="text-gray-800 space-y-1 text-md">
                         @foreach($umurData['labels'] as $i => $label)
-                            <li><strong>{{ $label }}</strong>: {{ $umurData['values'][$i] }} orang</li>
+                            <li>kategori usia <strong>{{ $label }}</strong> berjumlah {{ $umurData['values'][$i] }}</li>
                         @endforeach
                     </ul>
                 </div>
                 <div class="w-2/3 min-h-[350px]"><div id="umurChart"></div></div>
             </div>
         </div>
-
-
 
 
     <!-- Pendidikan -->
@@ -65,27 +79,6 @@
             </div>
             <div class="w-2/3 min-h-[350px]">
                 <div id="pendidikanChart"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Pekerjaan -->
-    <div id="chart-pekerjaan" class="chart-section hidden">
-        <div class="flex flex-row gap-6">
-            <div class="w-1/3 flex flex-col justify-start">
-                <h3 class="text-2xl font-bold mb-4">Data Pekerjaan Warga</h3>
-                <p class="text-gray-700 leading-relaxed mb-4">Grafik ini menggambarkan sebaran warga berdasarkan kelompok jenis pekerjaan warga dengan detail sebagai berikut: </p>
-
-                @php $pekerjaandata = json_decode($pekerjaanChart, true); @endphp
-
-                <ul class="text-gray-800 space-y-1 text-md">
-                    @foreach($pekerjaandata['labels'] as $i => $label)
-                        <li><strong>{{ $label }}</strong>: {{ $pekerjaandata['values'][$i] }} orang</li>
-                    @endforeach
-                </ul>
-            </div>
-            <div class="w-2/3 min-h-[350px]">
-                <div id="pekerjaanChart"></div>
             </div>
         </div>
     </div>
@@ -123,7 +116,7 @@
     const statusData = {!! $statusChart !!};
     const pendidikanData = {!! $pendidikanChart !!};
     const umurData = {!! $umurChart !!};
-    const pekerjaanData = {!! $pekerjaanChart !!};
+    const kelaminData = {!! $kelaminChart !!};
 
     // Warna untuk charts
     const colors = [
@@ -192,12 +185,12 @@
     pendidikanChartInstance.render();
 
     // === 3. PEKERJAAN ===
-    let pekerjaanChartInstance = new ApexCharts(
-        document.querySelector("#pekerjaanChart"),
+    let kelaminChartInstance = new ApexCharts(
+        document.querySelector("#kelaminChart"),
         {
-            series: pekerjaanData.values,
+            series: kelaminData.values,
             chart: { type: 'donut', height: 450 },
-            labels: pekerjaanData.labels,
+            labels: kelaminData.labels,
             colors: colors,
             legend: { position: 'right', fontSize: '24px', gap: '5px',
                 markers: { width: 16, height: 16},
@@ -217,7 +210,7 @@
             }
         }
     );
-    pekerjaanChartInstance.render();
+    kelaminChartInstance.render();
 
     // === 4. STATUS PERKAWINAN ===
     let statusChartInstance = new ApexCharts(
@@ -265,7 +258,7 @@
         activeBtn.classList.add('bg-sky-800', 'text-white');
     }
 
-    showChart('umur');
+    showChart('kelamin'); // Tampilkan chart jenis kelamin secara default
 </script>
 @endpush
 @endsection

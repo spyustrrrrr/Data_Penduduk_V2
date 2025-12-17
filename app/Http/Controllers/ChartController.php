@@ -28,6 +28,7 @@ class ChartController extends Controller
      */
     public function index()
     {
+
         // 1. Data Grafik Status Perkawinan (Pie Chart)
         $statusData = DB::table('residents')
             ->groupBy('status_perkawinan')
@@ -46,40 +47,37 @@ class ChartController extends Controller
         $pendidikanChart = $this->formatChartData($pendidikanData, 'pendidikan');
 
         // 3. Data Grafik Rentang Umur (Bar Chart)
+        // Bucket umur: Bayi (0-1), Balita (1-5), Anak-anak (6-10), Remaja (11-18), Dewasa (19-59), Lansia (60+)
         $umurData = DB::table('residents')
             ->select(DB::raw("
                 CASE
-                    WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) <= 10 THEN '0-10 Tahun'
-                    WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) <= 20 THEN '11-20 Tahun'
-                    WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) <= 30 THEN '21-30 Tahun'
-                    WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) <= 40 THEN '31-40 Tahun'
-                    WHEN TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()) <= 50 THEN '41-50 Tahun'
-                    ELSE '51+ Tahun'
+                    WHEN (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) >= 0 AND (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) < 6 THEN 'Balita (0-5 Tahun)'
+                    WHEN (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) >= 6 AND (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) < 11 THEN 'Anak-anak (6-10 Tahun)'
+                    WHEN (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) >= 11 AND (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) < 19 THEN 'Remaja (11-18 Tahun)'
+                    WHEN (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) >= 19 AND (TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE())/12) < 60 THEN 'Dewasa (19-59 Tahun)'
+                    ELSE 'Lansia (60+ Tahun)'
                 END as rentang_umur,
                 count(*) as total
             "))
             ->groupBy('rentang_umur')
-            // Urutkan berdasarkan urutan rentang umur, bukan jumlah
-            ->orderByRaw("MIN(TIMESTAMPDIFF(YEAR, tanggal_lahir, CURDATE()))")
+            // Urutkan berdasarkan umur minimum tiap grup (dalam bulan)
+            ->orderByRaw("MIN(TIMESTAMPDIFF(MONTH, tanggal_lahir, CURDATE()))")
             ->get();
         $umurChart = $this->formatChartData($umurData, 'rentang_umur');
 
-        // 4. Data Grafik Pekerjaan (Bar Chart - Top 10)
-        $pekerjaanData = DB::table('residents')
-            ->where('pekerjaan', '!=', '') // Abaikan string kosong
-            ->groupBy('pekerjaan')
-            ->select('pekerjaan', DB::raw('count(*) as total'))
+                // 4. Data Grafik Status jenis kelamin (Pie Chart)
+        $kelaminChart = DB::table('residents')
+            ->groupBy('jenis_kelamin')
+            ->select('jenis_kelamin', DB::raw('count(*) as total'))
             ->orderBy('total', 'desc')
-            ->limit(10)
             ->get();
-        $pekerjaanChart = $this->formatChartData($pekerjaanData, 'pekerjaan');
-
+        $kelaminChart = $this->formatChartData($kelaminChart, 'jenis_kelamin');
         // Kirim semua data ke view
         return view('charts', [
             'statusChart' => json_encode($statusChart),
             'pendidikanChart' => json_encode($pendidikanChart),
             'umurChart' => json_encode($umurChart),
-            'pekerjaanChart' => json_encode($pekerjaanChart),
+            'kelaminChart' => json_encode($kelaminChart),
         ]);
-    }
-}
+    }}
+
