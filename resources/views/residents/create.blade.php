@@ -148,6 +148,8 @@
                         <label class="{{ $labelClass }}">Pendidikan</label>
                         <select name="pendidikan" class="{{ $inputClass }}">
                             <option value="">Pilih</option>
+                            <option {{ old('pendidikan') == 'Belum Sekolah' ? 'selected' : '' }}>Belum Sekolah</option>
+                            <option {{ old('pendidikan') == 'TK' ? 'selected' : '' }}>TK</option>
                             <option {{ old('pendidikan') == 'SD' ? 'selected' : '' }}>SD</option>
                             <option {{ old('pendidikan') == 'SMP' ? 'selected' : '' }}>SMP</option>
                             <option {{ old('pendidikan') == 'SMA/SMK' ? 'selected' : '' }}>SMA/SMK</option>
