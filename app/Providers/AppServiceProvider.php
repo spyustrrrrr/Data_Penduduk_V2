@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\Resident;
+use App\Observers\ResidentObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register observers
+        Resident::observe(ResidentObserver::class);
+        \App\Models\KK::observe(\App\Observers\KKObserver::class);
     }
 }

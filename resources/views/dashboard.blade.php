@@ -48,24 +48,32 @@
 
         <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 space-y-3">
             @forelse($pengumuman as $item)
-                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/30">
-                    <p class="text-white text-sm">{{ $item }}</p>
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/30 hover:bg-white/30 transition">
+                    <div class="flex items-start gap-3">
+                        <!-- Icon berdasarkan action -->
+                        <div class="flex-shrink-0 mt-1">
+                            @if($item['action'] === 'created')
+                                <i class="fas fa-plus-circle text-green-300 text-lg"></i>
+                            @elseif($item['action'] === 'updated')
+                                <i class="fas fa-edit text-yellow-300 text-lg"></i>
+                            @elseif($item['action'] === 'deleted')
+                                <i class="fas fa-trash text-red-300 text-lg"></i>
+                            @endif
+                        </div>
+                        
+                        <div class="flex-1">
+                            <p class="text-white text-sm font-medium">{{ $item['description'] }}</p>
+                            <div class="flex items-center gap-3 mt-2 text-xs text-white/80">
+                                <span><i class="fas fa-user mr-1"></i>{{ $item['user'] }}</span>
+                                <span><i class="fas fa-clock mr-1"></i>{{ $item['time'] }}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @empty
-                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/30">
-                    <p class="text-white text-sm">Belum ada pengumuman terbaru.</p>
-                </div>
-                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/30">
-                    <p class="text-white text-sm">Belum ada pengumuman terbaru.</p>
-                </div>
-                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/30">
-                    <p class="text-white text-sm">Belum ada pengumuman terbaru.</p>
-                </div>
-                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/30">
-                    <p class="text-white text-sm">Belum ada pengumuman terbaru.</p>
-                </div>
-                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-4 border border-white/30">
-                    <p class="text-white text-sm">Belum ada pengumuman terbaru.</p>
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-6 border border-white/30 text-center">
+                    <i class="fas fa-inbox text-white/50 text-3xl mb-3"></i>
+                    <p class="text-white text-sm">Belum ada aktivitas terbaru.</p>
                 </div>
             @endforelse
         </div>

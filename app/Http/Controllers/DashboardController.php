@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Resident;
 use App\Models\KK;
+use App\Models\ActivityLog;
 
 class DashboardController extends Controller
 {
@@ -20,9 +21,19 @@ class DashboardController extends Controller
         $totalLaki = Resident::where('jenis_kelamin', 'Laki-laki')->count();
         $totalPerempuan = Resident::where('jenis_kelamin', 'Perempuan')->count();
 
-        // Anda bisa tambahkan logika untuk mengambil pengumuman di sini
-        // $pengumuman = Pengumuman::latest()->take(5)->get();
-        $pengumuman = []; // Placeholder, ganti dengan data asli nanti
+        // Ambil 5 log aktivitas terbaru
+        $pengumuman = ActivityLog::with('user')
+            ->latest('created_at')
+            ->take(5)
+            ->get()
+            ->map(function ($log) {
+                return [
+                    'description' => $log->description,
+                    'user' => $log->user ? $log->user->name : 'System',
+                    'time' => $log->created_at->diffForHumans(),
+                    'action' => $log->action,
+                ];
+            });
 
         return view('dashboard', [
             'totalWarga' => $totalWarga,

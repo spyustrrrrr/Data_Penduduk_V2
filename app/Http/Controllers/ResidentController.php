@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Resident;
 use App\Models\KK;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -177,16 +178,28 @@ class ResidentController extends Controller
             // Cek apakah No KK sudah ada
             $kk = KK::where('no_kk', $validated['no_kk'])->first();
 
-            // Jika belum ada, buat KK baru
+            // Jika belum ada, buat KK baru TANPA trigger observer
             if (!$kk) {
-                $kk = KK::create([
-                    'no_kk' => $validated['no_kk'],
-                    'alamat' => $validated['alamat'],
-                    'rt' => $validated['rt'] ?? '00',
-                    'rw' => $validated['rw'] ?? '00',
-                    'kelurahan' => $validated['kelurahan'] ?? 'Belum Diisi',
-                    'kecamatan' => $validated['kecamatan'] ?? 'Belum Diisi',
-                ]);
+                // Matikan observer sementara untuk KK
+                KK::withoutEvents(function () use ($validated, &$kk) {
+                    $kk = KK::create([
+                        'no_kk' => $validated['no_kk'],
+                        'alamat' => $validated['alamat'],
+                        'rt' => $validated['rt'] ?? '00',
+                        'rw' => $validated['rw'] ?? '00',
+                        'kelurahan' => $validated['kelurahan'] ?? 'Belum Diisi',
+                        'kecamatan' => $validated['kecamatan'] ?? 'Belum Diisi',
+                    ]);
+                });
+
+                // Manual log untuk KK baru
+                ActivityLog::log(
+                    action: 'created',
+                    model: 'KK',
+                    modelId: $kk->id,
+                    description: "Membuat Kartu Keluarga baru: {$kk->no_kk} (otomatis dari input warga)",
+                    newData: $kk->only(['no_kk', 'alamat', 'rt', 'rw', 'kelurahan', 'kecamatan'])
+                );
             }
 
             // Hapus field yang tidak ada di table residents
@@ -195,7 +208,7 @@ class ResidentController extends Controller
             // Set kk_id
             $validated['kk_id'] = $kk->id;
 
-            // Buat resident baru
+            // Buat resident baru (observer akan log otomatis)
             Resident::create($validated);
 
             DB::commit();
@@ -266,18 +279,29 @@ class ResidentController extends Controller
             // Cek apakah No KK sudah ada
             $kk = KK::where('no_kk', $validated['no_kk'])->first();
 
-            // Jika belum ada, buat KK baru
+            // Jika belum ada, buat KK baru TANPA trigger observer
             if (!$kk) {
-                $kk = KK::create([
-                    'no_kk' => $validated['no_kk'],
-                    'alamat' => $validated['alamat'],
-                    'rt' => $validated['rt'] ?? '00',
-                    'rw' => $validated['rw'] ?? '00',
-                    'kelurahan' => $validated['kelurahan'] ?? 'Belum Diisi',
-                    'kecamatan' => $validated['kecamatan'] ?? 'Belum Diisi',
-                ]);
+                KK::withoutEvents(function () use ($validated, &$kk) {
+                    $kk = KK::create([
+                        'no_kk' => $validated['no_kk'],
+                        'alamat' => $validated['alamat'],
+                        'rt' => $validated['rt'] ?? '00',
+                        'rw' => $validated['rw'] ?? '00',
+                        'kelurahan' => $validated['kelurahan'] ?? 'Belum Diisi',
+                        'kecamatan' => $validated['kecamatan'] ?? 'Belum Diisi',
+                    ]);
+                });
+
+                // Manual log
+                ActivityLog::log(
+                    action: 'created',
+                    model: 'KK',
+                    modelId: $kk->id,
+                    description: "Membuat Kartu Keluarga baru: {$kk->no_kk} (dari pemindahan warga)",
+                    newData: $kk->only(['no_kk', 'alamat', 'rt', 'rw', 'kelurahan', 'kecamatan'])
+                );
             } else {
-                // Update data KK yang sudah ada
+                // Update data KK yang sudah ada (observer akan log otomatis)
                 $kk->update([
                     'alamat' => $validated['alamat'],
                     'rt' => $validated['rt'] ?? $kk->rt,
@@ -293,14 +317,14 @@ class ResidentController extends Controller
             // Set kk_id
             $validated['kk_id'] = $kk->id;
 
-            // Update resident
+            // Update resident (observer akan log otomatis)
             $resident->update($validated);
 
             // Cek KK lama, jika sudah tidak punya warga, hapus
             if ($oldKkId != $kk->id) {
                 $oldKk = KK::find($oldKkId);
                 if ($oldKk && $oldKk->residents()->count() == 0) {
-                    $oldKk->delete();
+                    $oldKk->delete(); // Observer akan log otomatis
                 }
             }
 
