@@ -67,7 +67,7 @@
         <div class="flex flex-row gap-6">
             <div class="w-1/3 flex flex-col justify-start">
                 <h3 class="text-2xl font-bold mb-4">Data Pendidikan Warga</h3>
-                <p class="text-gray-700 leading-relaxed mb-4">Grafik ini menggambarkan sebaran warga berdasarkan Tingkat Pendidikan Warga dengan detail sebagai berikut: </p>
+                <p class="text-gray-700 leading-relaxed mb-4">Grafik ini menggambarkan sebaran warga berdasarkan Tingkat Pendidikan Terakhir Warga dengan detail sebagai berikut: </p>
 
                 @php $pendidikanData = json_decode($pendidikanChart, true); @endphp
 
