@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('action'); // 'created', 'updated', 'deleted'
             $table->string('model'); // 'Resident', 'KK'
             $table->unsignedBigInteger('model_id')->nullable();
-            $table->string('description'); // Deskripsi singkat
+            $table->text('description'); // Deskripsi singkat
             $table->json('old_data')->nullable(); // Data lama (untuk update/delete)
             $table->json('new_data')->nullable(); // Data baru (untuk create/update)
             $table->timestamp('created_at');
