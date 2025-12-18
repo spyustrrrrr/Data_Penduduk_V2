@@ -13,7 +13,7 @@ class ResidentObserver
     public function created(Resident $resident): void
     {
         $kkInfo = $resident->kk ? " di KK {$resident->kk->no_kk}" : "";
-        
+
         ActivityLog::log(
             action: 'created',
             model: 'Resident',
@@ -32,20 +32,16 @@ class ResidentObserver
         $changes = $resident->getChanges();
         $original = $resident->getOriginal();
 
-        // Filter hanya field penting
-        $importantFields = ['nama', 'nik', 'alamat', 'jenis_kelamin', 'status_perkawinan', 'pekerjaan'];
-        $changedFields = array_intersect_key($changes, array_flip($importantFields));
-
-        if (!empty($changedFields)) {
+        if (!empty($changes)) {
             $description = "Memperbarui data warga: {$resident->nama}";
-            
+
             // Tambahkan detail perubahan
             $details = [];
-            foreach ($changedFields as $field => $newValue) {
+            foreach ($changes as $field => $newValue) {
                 $oldValue = $original[$field] ?? '-';
                 $details[] = ucfirst(str_replace('_', ' ', $field)) . ": {$oldValue} → {$newValue}";
             }
-            
+
             if (!empty($details)) {
                 $description .= " (" . implode(', ', $details) . ")";
             }
@@ -55,8 +51,8 @@ class ResidentObserver
                 model: 'Resident',
                 modelId: $resident->id,
                 description: $description,
-                oldData: array_intersect_key($original, $changedFields),
-                newData: $changedFields
+                oldData: array_intersect_key($original, $changes),
+                newData: $changes
             );
         }
     }
