@@ -62,7 +62,7 @@ class Resident extends Model
      */
     public function kk(): BelongsTo
     {
-        return $this->belongsTo(KK::class);
+        return $this->belongsTo(KK::class, 'kk_id');
     }
 
     /**

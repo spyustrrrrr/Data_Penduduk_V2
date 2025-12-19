@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class KK extends Model
 {
     protected $table = 'kks';
-    
+
     protected $fillable = [
         'no_kk',
         'alamat',
@@ -20,6 +20,6 @@ class KK extends Model
 
     public function residents(): HasMany
     {
-        return $this->hasMany(Resident::class, 'kk_id', 'id');
+        return $this->hasMany(Resident::class, 'kk_id');
     }
 }

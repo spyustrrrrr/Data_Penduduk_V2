@@ -18,25 +18,21 @@ class ResidentController extends Controller
     public function index(Request $request)
     {
         $query = Resident::with('kk');
-
-        // Search
+        // SEARCH
         if ($request->filled('search')) {
             $search = $request->search;
 
             $query->where(function ($q) use ($search) {
                 $q->where('residents.nama', 'like', "%$search%")
-                  ->orWhere('residents.nik', 'like', "%$search%")
-                  ->orWhere('residents.alamat', 'like', "%$search%")
-                  ->orWhere('residents.pekerjaan', 'like', "%$search%")
-                  ->orWhere('residents.tempat_lahir', 'like', "%$search%")
-                  ->orWhere('residents.riwayat_penyakit', 'like', "%$search%")
-                  ->orWhere('residents.email', 'like', "%$search%")
-                  ->orWhere('residents.no_telepon', 'like', "%$search%")
-                  ->orWhere('residents.nama_ayah', 'like', "%$search%")
-                  ->orWhere('residents.nama_ibu', 'like', "%$search%");
-            })
-            ->orWhereHas('kk', function ($k) use ($search) {
-                $k->where('no_kk', 'like', "%$search%");
+                ->orWhere('residents.nik', 'like', "%$search%")
+                ->orWhere('residents.alamat', 'like', "%$search%")
+                ->orWhere('residents.pekerjaan', 'like', "%$search%")
+                ->orWhere('residents.tempat_lahir', 'like', "%$search%")
+                ->orWhere('residents.email', 'like', "%$search%")
+                ->orWhere('residents.no_telepon', 'like', "%$search%")
+                ->orWhereHas('kk', function ($k) use ($search) {
+                    $k->where('no_kk', 'like', "%$search%");
+                });
             });
         }
 
@@ -390,8 +386,7 @@ class ResidentController extends Controller
     public function export(Request $request)
     {
         $query = Resident::with('kk');
-
-        // SEARCH
+        // search (sama urutannya dengan index)
         if ($request->filled('search')) {
             $search = $request->search;
 
@@ -401,16 +396,14 @@ class ResidentController extends Controller
                 ->orWhere('residents.alamat', 'like', "%$search%")
                 ->orWhere('residents.pekerjaan', 'like', "%$search%")
                 ->orWhere('residents.tempat_lahir', 'like', "%$search%")
-                ->orWhere('residents.riwayat_penyakit', 'like', "%$search%")
                 ->orWhere('residents.email', 'like', "%$search%")
                 ->orWhere('residents.no_telepon', 'like', "%$search%")
-                ->orWhere('residents.nama_ayah', 'like', "%$search%")
-                ->orWhere('residents.nama_ibu', 'like', "%$search%");
-            })
-            ->orWhereHas('kk', function ($k) use ($search) {
-                $k->where('no_kk', 'like', "%$search%");
+                ->orWhereHas('kk', function ($k) use ($search) {
+                    $k->where('no_kk', 'like', "%$search%");
+                });
             });
         }
+
 
         // FILTERS
         $filterFields = [
@@ -444,7 +437,7 @@ class ResidentController extends Controller
                 $dateYounger = $today->copy()->subYears($ageFrom)->startOfDay();
                 $query->whereBetween('tanggal_lahir', [$dateOlder, $dateYounger]);
 
-                $activeFilters[] = "umur_{$ageFrom}_{$ageTo}";
+                $activeFilters[] = "umur_{$ageFrom}-{$ageTo}";
             }
             elseif ($request->filled('age_from')) {
                 $dateYounger = $today->copy()->subYears((int)$request->age_from)->startOfDay();

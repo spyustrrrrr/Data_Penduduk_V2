@@ -10,21 +10,22 @@
     </div>
 
     <!-- Filter Section -->
-    <div class="bg-white rounded-2xl shadow-xl p-6 mb-6">
-        <div class="flex items-center justify-between gap-2 mb-4" id="filter-switch">
+    <div class="bg-white rounded-2xl h-full shadow-xl p-6 mb-6 overflow-hidden transition-all">
+        <div class="flex items-center justify-between gap-2 mb-4 z-10 bg-white" id="filter-switch">
             <div class="flex items-center gap-2">
                 <i class="fas fa-filter text-sky-800"></i>
                 <h3 class="font-semibold text-gray-900">Filter & Pencarian</h3>
             </div>
             <div>
-                <button id="toggleFiltersBtn" type="button" aria-expanded="true" aria-controls="filtersPanel"
-                        class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 bg-white text-gray-700 hover:bg-gray-50">
-                    ×
+                <button id="toggleFiltersBtn" type="button"
+                        class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-sky-900 text-gray-50 hover:bg-sky-800 active:scale-110 transition">
+                    ▼
                 </button>
             </div>
         </div>
 
-        <form id="filtersPanel" method="GET" action="{{ route('residents.index') }}" class="space-y-4">
+        <form id="filtersPanel" method="GET" action="{{ route('residents.index') }}"
+        class="{{ request()->query() ? '' : 'hidden' }} space-y-4 animate__animated animate__fadeIn animate__faster">
             <div class="grid grid-cols-3 gap-4">
                 <div class="">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Cari</label>
@@ -68,8 +69,6 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Pendidikan Terakhir</label>
                     <select name="pendidikan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent transition">
                         <option value="">Semua</option>
-                        <option value="Belum Sekolah" {{ request('pendidikan') == 'Belum Sekolah' ? 'selected' : '' }}>Belum Sekolah</option>
-                        <option value="TK" {{ request('pendidikan') == 'TK' ? 'selected' : '' }}>TK</option>
                         <option value="SD" {{ request('pendidikan') == 'SD' ? 'selected' : '' }}>SD</option>
                         <option value="SMP" {{ request('pendidikan') == 'SMP' ? 'selected' : '' }}>SMP</option>
                         <option value="SMA/SMK" {{ request('pendidikan') == 'SMA/SMK' ? 'selected' : '' }}>SMA/SMK</option>
@@ -203,8 +202,6 @@
             // initialize button state based on panel visibility
             function setBtnState() {
                 const hidden = panel.classList.contains('hidden') || window.getComputedStyle(panel).display === 'none';
-                btn.setAttribute('aria-expanded', String(!hidden));
-                btn.textContent = hidden ? '▾' : '×';
                 // when panel hidden, set padding-bottom of header to 0
                 if (container) {
                     if (hidden) {
@@ -217,6 +214,7 @@
 
             btn.addEventListener('click', function(){
                 panel.classList.toggle('hidden');
+                btn.classList.toggle('rotate-180');
                 setBtnState();
             });
 
