@@ -1,61 +1,148 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Manajemen Penduduk – Role Based Access Control
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Ringkasan
 
-## About Laravel
+Sistem Manajemen Penduduk ini menerapkan **Role-Based Access Control (RBAC)** untuk membatasi hak akses pengguna berdasarkan peran.  
+Terdapat dua jenis peran, yaitu **Super Admin** dan **Admin**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Fitur pendaftaran pengguna (register) telah dihapus. Pembuatan akun Admin hanya dapat dilakukan oleh Super Admin guna meningkatkan keamanan dan kontrol sistem.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Perubahan Utama
 
-## Learning Laravel
+### 1. Perubahan Database
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Pada tabel `users` ditambahkan dua kolom baru:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+-   **role**  
+    Menentukan jenis pengguna dengan nilai:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+    -   `super_admin`
+    -   `admin`  
+        Default: `admin`
 
-## Laravel Sponsors
+-   **can_edit**  
+    Bertipe boolean untuk menentukan apakah Admin memiliki izin mengedit data.  
+    Default: `false`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+### 2. Perubahan pada User Model
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Pada file `app/Models/User.php` ditambahkan beberapa helper method:
 
-## Contributing
+-   `isSuperAdmin()` → Mengecek apakah user adalah Super Admin
+-   `isAdmin()` → Mengecek apakah user adalah Admin
+-   `canEdit()` → Mengecek apakah user memiliki izin edit  
+    (Super Admin selalu memiliki izin edit)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+### 3. Penghapusan Fitur Registrasi
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+-   Route registrasi dihapus
+-   Endpoint register tidak dapat diakses
+-   Link pendaftaran tidak ditampilkan pada halaman login
+-   Akun Admin hanya dapat dibuat oleh Super Admin
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4. Sistem Manajemen Admin
 
-## License
+Super Admin memiliki fitur khusus untuk mengelola akun Admin melalui `AdminController`, meliputi:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+-   Melihat daftar Admin
+-   Menambahkan Admin baru
+-   Mengedit data Admin
+-   Menghapus Admin
+-   Memberikan atau mencabut izin edit (`can_edit`)
+
+#### Tampilan (Views)
+
+-   `admins/index.blade.php` → Daftar Admin
+-   `admins/create.blade.php` → Form tambah Admin
+-   `admins/edit.blade.php` → Form edit Admin
+
+---
+
+### 5. Middleware
+
+Untuk mengatur akses pengguna, digunakan dua middleware:
+
+-   **SuperAdminMiddleware**  
+    Membatasi akses manajemen Admin hanya untuk Super Admin.
+
+-   **CanEditMiddleware**  
+    Memastikan user memiliki izin edit sebelum melakukan operasi tambah, ubah, atau hapus data.
+
+---
+
+### 6. Kontrol Akses pada Controller
+
+Pada `ResidentController` dan `KKController`, pembatasan akses diterapkan pada method:
+
+-   `create`
+-   `store`
+-   `edit`
+-   `update`
+-   `destroy`
+
+User tanpa izin edit tidak dapat melakukan perubahan data.
+
+---
+
+### 7. Perubahan Navigasi
+
+Menu **Manajemen Admin** hanya ditampilkan dan dapat diakses oleh Super Admin.  
+Admin biasa tidak dapat melihat menu tersebut.
+
+---
+
+## Struktur Role dan Hak Akses
+
+### Super Admin
+
+Hak akses:
+
+-   Mengelola akun Admin
+-   Mengatur password Admin
+-   Memberikan atau mencabut izin edit Admin
+-   Mengelola seluruh data Penduduk dan Kartu Keluarga
+-   Mengakses Manajemen Admin
+
+---
+
+### Admin
+
+#### Admin tanpa izin edit (`can_edit = false`)
+
+-   Dapat melihat data Penduduk dan Kartu Keluarga
+-   Tidak dapat menambah, mengubah, atau menghapus data
+-   Tidak dapat mengakses Manajemen Admin
+
+#### Admin dengan izin edit (`can_edit = true`)
+
+-   Dapat menambah, mengubah, dan menghapus data Penduduk dan Kartu Keluarga
+-   Tetap tidak dapat mengakses Manajemen Admin
+
+---
+
+## Daftar Route Manajemen Admin
+
+-   `GET /admins` → Daftar Admin
+-   `GET /admins/create` → Form tambah Admin
+-   `POST /admins` → Simpan Admin
+-   `GET /admins/{admin}/edit` → Form edit Admin
+-   `PUT /admins/{admin}` → Update Admin
+-   `DELETE /admins/{admin}` → Hapus Admin
+-   `PATCH /admins/{admin}/toggle-edit` → Toggle izin edit Admin
+
+---
+
+## Seeder Data Awal
+
+Seeder `UserSeeder` menyediakan data awal:
+
+-   1 akun Super Admin
+-   1 akun Admin

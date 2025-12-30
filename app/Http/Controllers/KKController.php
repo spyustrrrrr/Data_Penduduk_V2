@@ -4,9 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\KK;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class KKController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            if (in_array($request->route()->getActionMethod(), ['create', 'store', 'edit', 'update', 'destroy']) && !Auth::user()->canEdit()) {
+                return redirect(route('kks.index'))->with('error', 'Anda tidak memiliki izin untuk mengedit data');
+            }
+            return $next($request);
+        });
+    }
+
     public function index()
     {
         $kks = KK::withCount('residents')->paginate(15);

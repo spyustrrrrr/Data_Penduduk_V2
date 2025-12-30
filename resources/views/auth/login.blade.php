@@ -76,17 +76,7 @@
                     MASUK
                 </button>
 
-                <!-- Divider -->
-                <div class="flex items-center gap-4">
-                    <div class="flex-1 h-px bg-gray-300"></div>
-                    <span class="text-gray-500 text-sm">atau</span>
-                    <div class="flex-1 h-px bg-gray-300"></div>
-                </div>
-
-                <!-- Register link -->
-                <p class="text-center text-gray-600 text-sm">
-                    Belum punya akun? <a href="{{ route('register') }}" class="text-blue-600 font-bold hover:text-blue-700">Daftar sekarang</a>
-                </p>
+                <!-- Removed register link - registration is now disabled -->
             </form>
         </div>
     </div>

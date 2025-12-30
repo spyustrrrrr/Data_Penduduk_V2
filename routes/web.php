@@ -6,12 +6,11 @@ use App\Http\Controllers\ResidentController;
 use App\Http\Controllers\KKController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ChartController;
+use App\Http\Controllers\AdminController;
 
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('login', [AuthController::class, 'login']);
-    Route::get('register', [AuthController::class, 'register'])->name('register');
-    Route::post('register', [AuthController::class, 'register']);
 });
 
 Route::middleware('auth')->group(function () {
@@ -28,4 +27,9 @@ Route::middleware('auth')->group(function () {
 
     // API endpoint untuk cek KK
     Route::get('api/kk/check/{no_kk}', [KKController::class, 'checkKK'])->name('api.kk.check');
+
+    Route::middleware('super_admin')->group(function () {
+        Route::resource('admins', AdminController::class);
+        Route::patch('admins/{admin}/toggle-edit', [AdminController::class, 'toggleEdit'])->name('admins.toggle-edit');
+    });
 });

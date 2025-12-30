@@ -14,6 +14,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'can_edit',
     ];
 
     protected $hidden = [
@@ -26,6 +28,22 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'can_edit' => 'boolean',
         ];
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'super_admin';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function canEdit(): bool
+    {
+        return $this->isSuperAdmin() || ($this->isAdmin() && $this->can_edit);
     }
 }

@@ -39,25 +39,5 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    public function register(Request $request)
-    {
-        if ($request->isMethod('get')) {
-            return view('auth.register');
-        }
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        Auth::login($user);
-        return redirect(route('residents.index'));
-    }
+    // Registration method removed as per updates
 }

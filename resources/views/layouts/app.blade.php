@@ -58,6 +58,14 @@
                     <i class="fas fa-home w-5"></i>
                     <span>Beranda</span>
                 </a>
+                @auth
+                    @if (Auth::user()->isSuperAdmin())
+                        <a href="{{ route('admins.index') }}" class="nav-item {{ request()->routeIs('admins.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-3 rounded-lg">
+                            <i class="fas fa-user-shield w-5"></i>
+                            <span>Manajemen Admin</span>
+                        </a>
+                    @endif
+                @endauth
                 <a href="{{ route('residents.index') }}" class="nav-item {{ request()->routeIs('residents.index') ? 'active' : '' }} flex items-center gap-3 px-4 py-3 rounded-lg">
                     <i class="fas fa-table w-5"></i>
                     <span>Rekap Data Warga</span>

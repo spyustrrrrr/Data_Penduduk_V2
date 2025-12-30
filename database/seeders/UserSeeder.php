@@ -13,8 +13,10 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'admin@example.com'],
             [
-                'name' => 'Admin',
+                'name' => 'Super Admin',
                 'password' => Hash::make('password123'),
+                'role' => 'super_admin',
+                'can_edit' => true,
             ]
         );
 
@@ -23,6 +25,8 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Petugas',
                 'password' => Hash::make('password123'),
+                'role' => 'admin',
+                'can_edit' => false,
             ]
         );
     }
