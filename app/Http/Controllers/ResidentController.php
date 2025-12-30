@@ -15,12 +15,6 @@ class ResidentController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(function ($request, $next) {
-            if (in_array($request->route()->getActionMethod(), ['create', 'store', 'edit', 'update', 'destroy']) && !Auth::user()->canEdit()) {
-                return redirect(route('residents.index'))->with('error', 'Anda tidak memiliki izin untuk mengedit data');
-            }
-            return $next($request);
-        });
     }
 
     /**

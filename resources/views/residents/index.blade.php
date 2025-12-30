@@ -452,6 +452,7 @@
                                        title="Lihat Detail">
                                         <i class="fas fa-eye"></i>
                                     </a>
+                                    @if(Auth::user()->canEdit())
                                     <a href="{{ route('residents.edit', $resident->id) }}"
                                        class="inline-flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded-lg text-xs font-medium transition"
                                        title="Edit">
@@ -466,6 +467,9 @@
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
+                                    @else
+                                    <span class="inline-flex px-2 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-800">Restricted Access</span>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -549,5 +553,3 @@
     </div>
 </div>
 @endsection
-
-

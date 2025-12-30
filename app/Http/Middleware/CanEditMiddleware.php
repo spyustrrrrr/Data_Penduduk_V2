@@ -14,7 +14,7 @@ class CanEditMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!$request->user() || !$request->user()->canEdit()) {
-            return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk mengedit data');
+            return redirect(route('residents.index'))->with('error', 'Anda tidak memiliki akses untuk mengedit data');
         }
 
         return $next($request);

@@ -9,10 +9,12 @@
         <h3 class="text-gray-600 text-sm font-medium mb-1">Manajemen Kartu Keluarga</h3>
         <p class="text-gray-500 text-sm">Total: <span class="font-semibold text-gray-900">{{ $kks->total() }}</span> kartu keluarga</p>
     </div>
+    @if(Auth::user()->canEdit())
     <a href="{{ route('kks.create') }}" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition font-medium">
         <i class="fas fa-plus"></i>
         Tambah KK
     </a>
+    @endif
 </div>
 
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -43,6 +45,7 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 text-sm">
+                            @if(Auth::user()->canEdit())
                             <div class="flex gap-2">
                                 <a href="{{ route('kks.edit', $kk) }}" class="inline-flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition">
                                     <i class="fas fa-edit"></i>
@@ -57,6 +60,9 @@
                                     </button>
                                 </form>
                             </div>
+                            @else
+                            <span class="text-gray-400 italic text-xs">Akses Terbatas</span>
+                            @endif
                         </td>
                     </tr>
                 @empty

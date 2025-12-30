@@ -25,14 +25,11 @@
                         {{ __('Kartu Keluarga') }}
                     </x-nav-link>
 
-                    <!-- Add admin management link for Super Admin with proper styling -->
+                    <!-- Updated Manajemen Admin link styling to match other nav links for Super Admin -->
                     @if (Auth::user()->isSuperAdmin())
-                        <a href="{{ route('admins.index') }}" class="inline-flex items-center px-3 pt-1 pb-1 border-b-2 text-sm font-medium transition ease-in-out duration-150 {{ request()->routeIs('admins.*') ? 'border-red-500 text-red-600' : 'border-transparent text-gray-500 hover:text-red-600 hover:border-red-300' }}">
-                            <svg class="w-5 h-5 me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                            </svg>
+                        <x-nav-link :href="route('admins.index')" :active="request()->routeIs('admins.*')">
                             {{ __('Manajemen Admin') }}
-                        </a>
+                        </x-nav-link>
                     @endif
                 </div>
             </div>
@@ -98,14 +95,11 @@
                 {{ __('Kartu Keluarga') }}
             </x-responsive-nav-link>
 
-            <!-- Add admin management link for Super Admin in mobile menu -->
+            <!-- Updated Manajemen Admin link styling to match other nav links for Super Admin -->
             @if (Auth::user()->isSuperAdmin())
-                <a href="{{ route('admins.index') }}" class="block px-4 py-2 text-base font-medium {{ request()->routeIs('admins.*') ? 'bg-red-100 border-l-4 border-red-500 text-red-900' : 'text-gray-600 hover:text-gray-900 hover:bg-red-50' }} transition ease-in-out duration-150 flex items-center">
-                    <svg class="w-5 h-5 me-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                    </svg>
+                <x-responsive-nav-link :href="route('admins.index')" :active="request()->routeIs('admins.*')">
                     {{ __('Manajemen Admin') }}
-                </a>
+                </x-responsive-nav-link>
             @endif
         </div>
 
