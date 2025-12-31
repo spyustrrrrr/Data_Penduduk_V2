@@ -69,6 +69,8 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Pendidikan Terakhir</label>
                     <select name="pendidikan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-800 focus:border-transparent transition">
                         <option value="">Semua</option>
+                        <option value="Belum Sekolah" {{ request('pendidikan') == 'Belum_Sekolah' ? 'selected' : '' }}>Belum Sekolah</option>
+                        <option value="TK" {{ request('pendidikan') == 'TK' ? 'selected' : '' }}>TK</option>
                         <option value="SD" {{ request('pendidikan') == 'SD' ? 'selected' : '' }}>SD</option>
                         <option value="SMP" {{ request('pendidikan') == 'SMP' ? 'selected' : '' }}>SMP</option>
                         <option value="SMA/SMK" {{ request('pendidikan') == 'SMA/SMK' ? 'selected' : '' }}>SMA/SMK</option>
@@ -300,10 +302,10 @@
                     @php
                         $badgeMap = [
                             'status_perkawinan' => [
-                                'Belum Menikah' => 'bg-sky-100 text-sky-800',
+                                'Belum Menikah' => 'bg-gray-100 text-gray-800',
                                 'Menikah' => 'bg-green-100 text-green-800',
                                 'Janda' => 'bg-amber-100 text-amber-800',
-                                'Duda' => 'bg-gray-100 text-gray-800',
+                                'Duda' => 'bg-sky-100 text-sky-800',
                             ],
                             'golongan_darah' => [
                                 'A+' => 'bg-red-100 text-red-800',
@@ -349,11 +351,13 @@
                                 'Konghucu' => 'bg-rose-100 text-rose-800',
                             ],
                             'pendidikan' => [
+                                'Belum_Sekolah' => 'bg-gray-100 text-gray-800',
+                                'TK' => 'bg-amber-100 text-amber-800',
                                 'SD' => 'bg-amber-100 text-amber-800',
                                 'SMP' => 'bg-yellow-100 text-yellow-800',
                                 'SMA/SMK' => 'bg-sky-100 text-sky-800',
                                 'D1/D2/D3' => 'bg-indigo-100 text-indigo-800',
-                                'S1/D4' => 'bg-green-100 text-green-800',
+                                'S1/D4' => 'bg-fuchsia-100 text-fuchsia-800',
                                 'S2' => 'bg-purple-100 text-purple-800',
                                 'S3' => 'bg-rose-100 text-rose-800',
                             ],

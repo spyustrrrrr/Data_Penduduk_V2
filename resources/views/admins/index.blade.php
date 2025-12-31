@@ -10,7 +10,7 @@
             <h1 class="text-4xl font-bold text-gray-900">Kelola Admin</h1>
             <p class="text-gray-600 mt-2">Kelola akun admin dan izin akses untuk mengedit data</p>
         </div>
-        <a href="{{ route('admins.create') }}" class="bg-sky-600 text-white px-6 py-3 rounded-lg hover:bg-sky-700 transition flex items-center gap-2 w-fit shadow-lg">
+        <a href="{{ route('admins.create') }}" class="bg-sky-900 text-white px-6 py-3 rounded-lg hover:bg-sky-700 transition flex items-center gap-2 w-fit shadow-lg">
             <i class="fas fa-plus"></i>
             <span>Tambah Admin Baru</span>
         </a>
@@ -40,10 +40,10 @@
     <!-- Admin List Table with modern styling -->
     <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
         <!-- Table Header -->
-        <div class="bg-gradient-to-r from-sky-50 to-sky-100 px-6 py-4 border-b border-sky-200">
+        <div class="bg-gradient-to-r from-sky-900 to-sky-800 px-6 py-4 border-b border-sky-200">
             <div class="flex items-center gap-3">
-                <i class="fas fa-users text-sky-600 text-lg"></i>
-                <h2 class="text-lg font-bold text-sky-900">Daftar Admin ({{ $admins->total() }})</h2>
+                <i class="fas fa-users text-white text-lg"></i>
+                <h2 class="text-lg font-bold text-white">Daftar Admin ({{ $admins->total() }})</h2>
             </div>
         </div>
 
@@ -55,7 +55,7 @@
                         <tr>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">No</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Nama Admin</th>
-                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Username</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Email</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status Izin</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Aksi</th>
                         </tr>
@@ -78,7 +78,7 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-600">
-                                    <code class="bg-gray-100 px-3 py-1 rounded text-xs">{{ $admin->email }}</code>
+                                    <code class="bg-lime-300 px-3 py-1 rounded text-sm font-bold">{{ $admin->email }}</code>
                                 </td>
                                 <td class="px-6 py-4">
                                     @if ($admin->can_edit)
@@ -87,7 +87,7 @@
                                             <span>Diizinkan</span>
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-800 border border-gray-300">
+                                        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-gray-200 text-gray-800 border border-gray-300">
                                             <i class="fas fa-lock"></i>
                                             <span>Terbatas</span>
                                         </span>
